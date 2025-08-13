@@ -1,3 +1,11 @@
+<?php
+include "service/database.php";
+
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -113,7 +121,7 @@
         </div>
 
         <!-- Login Form -->
-        <form id="loginForm" class="space-y-6">
+        <form id="loginForm" class="space-y-6" method="POST>
             <!-- Email Input -->
             <div>
                 <label for="email" class="block text-sm font-medium text-white/90 mb-2">Email</label>
