@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SD Nusantara - Sistem Keamanan Sekolah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .fade-in {
+        animation: fadeIn 0.8s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .slide-in-left {
+        animation: slideInLeft 1s ease-out;
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .slide-in-right {
+        animation: slideInRight 1s ease-out;
+      }
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .bounce-in {
+        animation: bounceIn 1.2s ease-out;
+      }
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        70% {
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .floating {
+        animation: floating 3s ease-in-out infinite;
+      }
+      @keyframes floating {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div
+              class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 rounded-full"
+            >
+              <i class="fas fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold gradient-text">SD Nusantara</h1>
+              <p class="text-sm text-gray-600">Sekolah Dasar Terdepan</p>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="#beranda"
+              class="text-gray-700 hover:text-blue-600 transition-colors"
+              >Beranda</a
+            >
+            <a
+              href="#tentang"
+              class="text-gray-700 hover:text-blue-600 transition-colors"
+              >Tentang</a
+            >
+            <a
+              href="#fitur"
+              class="text-gray-700 hover:text-blue-600 transition-colors"
+              >Fitur</a
+            >
+            <a
+              href="#kontak"
+              class="text-gray-700 hover:text-blue-600 transition-colors"
+              >Kontak</a
+            >
+            <button
+              onclick="showLogin()"
+              class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-full transition-all transform hover:scale-105"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+            </button>
+          </div>
+          <button class="md:hidden text-gray-700" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div id="mobileMenu" class="md:hidden bg-white border-t hidden">
+        <div class="px-6 py-4 space-y-3">
+          <a href="#beranda" class="block text-gray-700 hover:text-blue-600"
+            >Beranda</a
+          >
+          <a href="#tentang" class="block text-gray-700 hover:text-blue-600"
+            >Tentang</a
+          >
+          <a href="#fitur" class="block text-gray-700 hover:text-blue-600"
+            >Fitur</a
+          >
+          <a href="#kontak" class="block text-gray-700 hover:text-blue-600"
+            >Kontak</a
+          >
+          <button
+            onclick="showLogin()"
+            class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full"
+          >
+            <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="hero-bg text-white pt-24 pb-16">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col lg:flex-row items-center">
+          <div class="lg:w-1/2 mb-12 lg:mb-0 slide-in-left">
+            <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+              Portal Akademik
+              <span class="block text-yellow-300">SD Nusantara</span>
+            </h1>
+            <p class="text-xl mb-8 text-blue-100 leading-relaxed">
+              Sistem informasi sekolah untuk guru, siswa, dan orang tua. Akses
+              nilai, jadwal pelajaran, dan komunikasi dengan mudah dan aman.
+            </p>
+            <div
+              class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+            >
+              <button
+                onclick="showLogin()"
+                class="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
+              >
+                <i class="fas fa-rocket mr-2"></i>Mulai Sekarang
+              </button>
+              <button
+                onclick="scrollToSection('tentang')"
+                class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-all"
+              >
+                <i class="fas fa-play mr-2"></i>Pelajari Lebih Lanjut
+              </button>
+            </div>
+          </div>
+          <div class="lg:w-1/2 slide-in-right">
+            <div class="relative">
+              <div
+                class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8 floating"
+              >
+                <div class="grid grid-cols-2 gap-6">
+                  <div
+                    class="bg-white bg-opacity-20 rounded-2xl p-6 text-center"
+                  >
+                    <div
+                      class="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                      <i class="fas fa-shield-alt text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Keamanan Tinggi</h3>
+                    <p class="text-sm text-blue-100">Enkripsi data berlapis</p>
+                  </div>
+                  <div
+                    class="bg-white bg-opacity-20 rounded-2xl p-6 text-center"
+                  >
+                    <div
+                      class="bg-green-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                      <i class="fas fa-users text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Multi User</h3>
+                    <p class="text-sm text-blue-100">Guru, siswa, orang tua</p>
+                  </div>
+                  <div
+                    class="bg-white bg-opacity-20 rounded-2xl p-6 text-center"
+                  >
+                    <div
+                      class="bg-purple-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                      <i class="fas fa-mobile-alt text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Responsif</h3>
+                    <p class="text-sm text-blue-100">Akses dari mana saja</p>
+                  </div>
+                  <div
+                    class="bg-white bg-opacity-20 rounded-2xl p-6 text-center"
+                  >
+                    <div
+                      class="bg-red-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                      <i class="fas fa-clock text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Real-time</h3>
+                    <p class="text-sm text-blue-100">Update langsung</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          <div class="fade-in">
+            <div
+              class="text-4xl font-bold text-blue-600 mb-2"
+              id="studentsCount"
+            >
+              0
+            </div>
+            <p class="text-gray-600">Siswa Aktif</p>
+          </div>
+          <div class="fade-in">
+            <div
+              class="text-4xl font-bold text-green-600 mb-2"
+              id="teachersCount"
+            >
+              0
+            </div>
+            <p class="text-gray-600">Guru Berpengalaman</p>
+          </div>
+          <div class="fade-in">
+            <div
+              class="text-4xl font-bold text-purple-600 mb-2"
+              id="parentsCount"
+            >
+              0
+            </div>
+            <p class="text-gray-600">Orang Tua Terdaftar</p>
+          </div>
+          <div class="fade-in">
+            <div
+              class="text-4xl font-bold text-orange-600 mb-2"
+              id="securityLevel"
+            >
+              99
+            </div>
+            <p class="text-gray-600">% Tingkat Keamanan</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="tentang" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 fade-in">
+          <h2 class="text-4xl font-bold gradient-text mb-4">
+            Tentang SD Nusantara
+          </h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Sekolah dasar negeri yang telah berdiri sejak 2009, melayani
+            pendidikan untuk siswa kelas 1-6 dengan fasilitas lengkap dan tenaga
+            pengajar berpengalaman.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="slide-in-left">
+            <div class="bg-white rounded-3xl p-8 shadow-xl">
+              <div class="grid grid-cols-2 gap-6">
+                <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                  <i class="fas fa-award text-3xl text-blue-600 mb-4"></i>
+                  <h4 class="font-bold text-gray-800">Akreditasi A</h4>
+                  <p class="text-sm text-gray-600">Standar Nasional</p>
+                </div>
+                <div class="text-center p-6 bg-green-50 rounded-2xl">
+                  <i class="fas fa-medal text-3xl text-green-600 mb-4"></i>
+                  <h4 class="font-bold text-gray-800">25+ Prestasi</h4>
+                  <p class="text-sm text-gray-600">Tingkat Nasional</p>
+                </div>
+                <div class="text-center p-6 bg-purple-50 rounded-2xl">
+                  <i
+                    class="fas fa-graduation-cap text-3xl text-purple-600 mb-4"
+                  ></i>
+                  <h4 class="font-bold text-gray-800">15 Tahun</h4>
+                  <p class="text-sm text-gray-600">Pengalaman</p>
+                </div>
+                <div class="text-center p-6 bg-orange-50 rounded-2xl">
+                  <i class="fas fa-heart text-3xl text-orange-600 mb-4"></i>
+                  <h4 class="font-bold text-gray-800">100% Cinta</h4>
+                  <p class="text-sm text-gray-600">Untuk Pendidikan</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-in-right">
+            <h3 class="text-3xl font-bold text-gray-800 mb-6">
+              Visi & Misi Kami
+            </h3>
+
+            <div class="mb-8">
+              <h4 class="text-xl font-semibold text-blue-600 mb-3">
+                <i class="fas fa-eye mr-2"></i>Visi
+              </h4>
+              <p class="text-gray-700 leading-relaxed">
+                Terwujudnya siswa yang cerdas, berkarakter, dan berakhlak mulia
+                berdasarkan nilai-nilai Pancasila dan budaya bangsa Indonesia.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="text-xl font-semibold text-green-600 mb-3">
+                <i class="fas fa-bullseye mr-2"></i>Misi
+              </h4>
+              <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                  Melaksanakan pembelajaran yang aktif, kreatif, dan
+                  menyenangkan
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                  Menumbuhkan semangat keunggulan kepada seluruh warga sekolah
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                  Mendorong dan membantu siswa mengenali potensi dirinya
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                  Menerapkan manajemen partisipatif dengan melibatkan seluruh
+                  warga sekolah
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="fitur" class="py-20 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 fade-in">
+          <h2 class="text-4xl font-bold gradient-text mb-4">
+            Fitur Portal Akademik
+          </h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Portal akademik SD Nusantara menyediakan berbagai fitur untuk
+            memudahkan akses informasi akademik dan komunikasi antara guru,
+            siswa, dan orang tua.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-2 fade-in"
+          >
+            <div
+              class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-graduation-cap text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Data Akademik</h3>
+            <p class="text-gray-600 mb-4">
+              Akses informasi nilai, rapor, dan perkembangan akademik siswa
+              secara real-time dengan sistem yang aman.
+            </p>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>
+                <i class="fas fa-check text-blue-500 mr-2"></i>Nilai Harian &
+                UTS/UAS
+              </li>
+              <li>
+                <i class="fas fa-check text-blue-500 mr-2"></i>Rapor Digital
+              </li>
+              <li>
+                <i class="fas fa-check text-blue-500 mr-2"></i>Grafik
+                Perkembangan
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-2 fade-in"
+          >
+            <div
+              class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-calendar-alt text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+              Jadwal Pelajaran
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Lihat jadwal pelajaran harian, mingguan, dan informasi perubahan
+              jadwal untuk semua kelas.
+            </p>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>Jadwal Real-time
+              </li>
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>Notifikasi
+                Perubahan
+              </li>
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>Kalender
+                Akademik
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-2 fade-in"
+          >
+            <div
+              class="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-comments text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Komunikasi</h3>
+            <p class="text-gray-600 mb-4">
+              Fasilitas komunikasi antara guru, siswa, dan orang tua melalui
+              pesan, pengumuman, dan forum diskusi.
+            </p>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>
+                <i class="fas fa-check text-purple-500 mr-2"></i>Pesan Langsung
+              </li>
+              <li>
+                <i class="fas fa-check text-purple-500 mr-2"></i>Pengumuman
+                Sekolah
+              </li>
+              <li>
+                <i class="fas fa-check text-purple-500 mr-2"></i>Forum Diskusi
+                Kelas
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-2 fade-in"
+          >
+            <div
+              class="bg-orange-500 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-user-check text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+              Presensi Digital
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Sistem absensi digital untuk siswa dan guru dengan laporan
+              kehadiran yang akurat dan mudah diakses.
+            </p>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>
+                <i class="fas fa-check text-orange-500 mr-2"></i>Absensi Harian
+              </li>
+              <li>
+                <i class="fas fa-check text-orange-500 mr-2"></i>Rekap Kehadiran
+              </li>
+              <li>
+                <i class="fas fa-check text-orange-500 mr-2"></i>Notifikasi
+                Ketidakhadiran
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-2 fade-in"
+          >
+            <div
+              class="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-book text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+              Materi Pembelajaran
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Akses materi pelajaran, tugas, dan sumber belajar digital yang
+              disediakan oleh guru mata pelajaran.
+            </p>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>
+                <i class="fas fa-check text-red-500 mr-2"></i>Materi Digital
+              </li>
+              <li>
+                <i class="fas fa-check text-red-500 mr-2"></i>Tugas Online
+              </li>
+              <li><i class="fas fa-check text-red-500 mr-2"></i>Bank Soal</li>
+            </ul>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-2 fade-in"
+          >
+            <div
+              class="bg-indigo-500 w-16 h-16 rounded-full flex items-center justify-center mb-6"
+            >
+              <i class="fas fa-mobile-alt text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+              Akses Multi-Platform
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Portal dapat diakses melalui komputer, tablet, atau smartphone
+              dengan tampilan yang responsif dan user-friendly.
+            </p>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>
+                <i class="fas fa-check text-indigo-500 mr-2"></i>Responsive
+                Design
+              </li>
+              <li>
+                <i class="fas fa-check text-indigo-500 mr-2"></i>Mobile Friendly
+              </li>
+              <li>
+                <i class="fas fa-check text-indigo-500 mr-2"></i>Cross Browser
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 fade-in">
+          <h2 class="text-4xl font-bold gradient-text mb-4">Hubungi Kami</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Untuk informasi lebih lanjut tentang sekolah atau bantuan teknis
+            portal akademik, silakan hubungi kami.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-16">
+          <div class="slide-in-left">
+            <div class="bg-white rounded-2xl p-8 shadow-xl">
+              <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                Informasi Kontak
+              </h3>
+
+              <div class="space-y-6">
+                <div class="flex items-center">
+                  <div class="bg-blue-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-map-marker-alt text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Alamat</h4>
+                    <p class="text-gray-600">
+                      Jl. Pendidikan No. 123, Jakarta Selatan 12345
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center">
+                  <div class="bg-green-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-phone text-green-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Telepon</h4>
+                    <p class="text-gray-600">(021) 1234-5678</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center">
+                  <div class="bg-purple-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-envelope text-purple-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Email</h4>
+                    <p class="text-gray-600">info@sdnusantara.sch.id</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center">
+                  <div class="bg-orange-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-clock text-orange-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-800">Jam Operasional</h4>
+                    <p class="text-gray-600">
+                      Senin - Jumat: 07:00 - 16:00 WIB
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 pt-8 border-t border-gray-200">
+                <h4 class="font-semibold text-gray-800 mb-4">Ikuti Kami</h4>
+                <div class="flex space-x-4">
+                  <a
+                    href="#"
+                    class="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
+                  >
+                    <i class="fab fa-facebook-f"></i>
+                  </a>
+                  <a
+                    href="#"
+                    class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors"
+                  >
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                  <a
+                    href="#"
+                    class="bg-pink-500 text-white p-3 rounded-full hover:bg-pink-600 transition-colors"
+                  >
+                    <i class="fab fa-instagram"></i>
+                  </a>
+                  <a
+                    href="#"
+                    class="bg-red-500 text-white p-3 rounded-full hover:bg-red-600 transition-colors"
+                  >
+                    <i class="fab fa-youtube"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-in-right">
+            <div class="bg-white rounded-2xl p-8 shadow-xl">
+              <h3 class="text-2xl font-bold text-gray-800 mb-6">Kirim Pesan</h3>
+
+              <form onsubmit="handleContactForm(event)" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Nama Lengkap</label
+                    >
+                    <input
+                      type="text"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Nama Anda"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Email</label
+                    >
+                    <input
+                      type="email"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="email@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Subjek</label
+                  >
+                  <select
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Pilih Subjek</option>
+                    <option value="info">Informasi Umum</option>
+                    <option value="pendaftaran">Pendaftaran Siswa</option>
+                    <option value="sistem">Pertanyaan Sistem</option>
+                    <option value="kerjasama">Kerjasama</option>
+                    <option value="lainnya">Lainnya</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Pesan</label
+                  >
+                  <textarea
+                    required
+                    rows="5"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Tulis pesan Anda di sini..."
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105"
+                >
+                  <i class="fas fa-paper-plane mr-2"></i>Kirim Pesan
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+      <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center space-x-3 mb-4">
+              <div
+                class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-2 rounded-full"
+              >
+                <i class="fas fa-graduation-cap text-lg"></i>
+              </div>
+              <h3 class="text-xl font-bold">SD Nusantara</h3>
+            </div>
+            <p class="text-gray-400 mb-4">
+              Sekolah Dasar Negeri yang berkomitmen memberikan pendidikan
+              berkualitas dengan dukungan teknologi informasi untuk kemudahan
+              akses informasi akademik.
+            </p>
+            <div class="flex space-x-3">
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+              >
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+              >
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+              >
+                <i class="fab fa-youtube"></i>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Menu Utama</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#beranda"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Beranda</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#tentang"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Tentang Kami</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#fitur"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Fitur</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#kontak"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Kontak</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Layanan</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Portal Akademik</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Informasi Nilai</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Jadwal Pelajaran</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >Komunikasi Sekolah</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Kontak Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <i class="fas fa-map-marker-alt mr-2"></i>Jakarta Selatan 12345
+              </li>
+              <li><i class="fas fa-phone mr-2"></i>(021) 1234-5678</li>
+              <li>
+                <i class="fas fa-envelope mr-2"></i>info@sdnusantara.sch.id
+              </li>
+              <li><i class="fas fa-clock mr-2"></i>Sen-Jum: 07:00-16:00</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+          <p class="text-gray-400">
+            © 2024 SD Nusantara. Semua hak cipta dilindungi.
+            <span class="mx-2">|</span>
+            <a href="#" class="hover:text-white transition-colors"
+              >Kebijakan Privasi</a
+            >
+            <span class="mx-2">|</span>
+            <a href="#" class="hover:text-white transition-colors"
+              >Syarat & Ketentuan</a
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div
+      id="loginModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 bounce-in">
+        <div class="text-center mb-8">
+          <div
+            class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fas fa-lock text-3xl text-blue-600"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Login Sistem</h2>
+          <p class="text-gray-600">Masuk dengan akun Anda</p>
+        </div>
+
+        <form onsubmit="handleLogin(event)" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Tipe Pengguna</label
+            >
+            <select
+              id="userType"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="guru">👨‍🏫 Guru</option>
+              <option value="siswa">👨‍🎓 Siswa</option>
+              <option value="orangtua">👨‍👩‍👧‍👦 Orang Tua</option>
+              <option value="admin">🔧 Administrator</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Username/Email</label
+            >
+            <input
+              type="text"
+              id="username"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Masukkan username atau email"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Password</label
+            >
+            <div class="relative">
+              <input
+                type="password"
+                id="password"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
+                placeholder="Masukkan password"
+              />
+              <button
+                type="button"
+                onclick="togglePassword()"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                <i class="fas fa-eye" id="passwordToggle"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex space-x-3">
+            <button
+              type="button"
+              onclick="hideLogin()"
+              class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+            </button>
+          </div>
+
+          <div class="text-center space-y-2">
+            <button
+              type="button"
+              class="text-blue-600 hover:text-blue-800 text-sm block w-full"
+            >
+              Lupa Password?
+            </button>
+            <div class="text-gray-500 text-sm">atau</div>
+            <button
+              type="button"
+              class="text-green-600 hover:text-green-800 text-sm font-medium"
+            >
+              Daftar Akun Baru
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
+
+    <script>
+      // Initialize animations and counters
+      document.addEventListener("DOMContentLoaded", function () {
+        animateCounters();
+        observeElements();
+      });
+
+      // Animate counters
+      function animateCounters() {
+        const counters = [
+          { id: "studentsCount", target: 450 },
+          { id: "teachersCount", target: 25 },
+          { id: "parentsCount", target: 380 },
+          { id: "securityLevel", target: 99 },
+        ];
+
+        counters.forEach((counter) => {
+          const element = document.getElementById(counter.id);
+          let current = 0;
+          const increment = counter.target / 100;
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= counter.target) {
+              current = counter.target;
+              clearInterval(timer);
+            }
+            element.textContent = Math.floor(current);
+          }, 20);
+        });
+      }
+
+      // Observe elements for animations
+      function observeElements() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+            }
+          });
+        });
+
+        document
+          .querySelectorAll(".fade-in, .slide-in-left, .slide-in-right")
+          .forEach((el) => {
+            observer.observe(el);
+          });
+      }
+
+      // Navigation functions
+      function toggleMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        menu.classList.toggle("hidden");
+      }
+
+      function scrollToSection(sectionId) {
+        document.getElementById(sectionId).scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+
+      // Login modal functions
+      function showLogin() {
+        document.getElementById("loginModal").classList.remove("hidden");
+        document.getElementById("loginModal").classList.add("flex");
+      }
+
+      function hideLogin() {
+        document.getElementById("loginModal").classList.add("hidden");
+        document.getElementById("loginModal").classList.remove("flex");
+      }
+
+      function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleIcon = document.getElementById("passwordToggle");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          toggleIcon.className = "fas fa-eye-slash";
+        } else {
+          passwordInput.type = "password";
+          toggleIcon.className = "fas fa-eye";
+        }
+      }
+
+      function handleLogin(event) {
+        event.preventDefault();
+
+        const userType = document.getElementById("userType").value;
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username && password) {
+          showMessage("Login berhasil! Mengalihkan ke dashboard...", "success");
+          setTimeout(() => {
+            // Redirect to main system
+            window.location.href = "#dashboard";
+          }, 2000);
+        } else {
+          showMessage("Username dan password harus diisi!", "error");
+        }
+      }
+
+      function handleContactForm(event) {
+        event.preventDefault();
+        showMessage(
+          "Pesan Anda telah terkirim! Kami akan segera menghubungi Anda.",
+          "success"
+        );
+        event.target.reset();
+      }
+
+      function showMessage(message, type) {
+        const container = document.getElementById("messageContainer");
+        const messageDiv = document.createElement("div");
+
+        const colors = {
+          success: "bg-green-500",
+          error: "bg-red-500",
+          info: "bg-blue-500",
+        };
+
+        const icons = {
+          success: "fas fa-check-circle",
+          error: "fas fa-exclamation-circle",
+          info: "fas fa-info-circle",
+        };
+
+        messageDiv.className = `${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg mb-4 flex items-center fade-in`;
+        messageDiv.innerHTML = `
+                <i class="${icons[type]} mr-3"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+        container.appendChild(messageDiv);
+
+        setTimeout(() => {
+          if (messageDiv.parentElement) {
+            messageDiv.remove();
+          }
+        }, 5000);
+      }
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener("click", function (event) {
+        const mobileMenu = document.getElementById("mobileMenu");
+        const menuButton = event.target.closest("button");
+
+        if (!menuButton && !mobileMenu.contains(event.target)) {
+          mobileMenu.classList.add("hidden");
+        }
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'96ead308d3caa3d9',t:'MTc1NTExNTQ5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

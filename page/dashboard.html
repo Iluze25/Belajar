@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Sekolah Dasar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">SD</span>
+                    </div>
+                    <h1 class="ml-3 text-xl font-semibold text-gray-900">Dashboard Sekolah</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">Selamat datang, Pak Guru</span>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <span class="text-blue-600 text-xl">👥</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Siswa</p>
+                        <p class="text-2xl font-bold text-gray-900">248</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <span class="text-green-600 text-xl">📚</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Kelas Aktif</p>
+                        <p class="text-2xl font-bold text-gray-900">12</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <span class="text-yellow-600 text-xl">📝</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Tugas Aktif</p>
+                        <p class="text-2xl font-bold text-gray-900">18</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <span class="text-purple-600 text-xl">📊</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Rata-rata Nilai</p>
+                        <p class="text-2xl font-bold text-gray-900">8.2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Jadwal Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <span class="mr-2">📅</span> Jadwal Hari Ini
+                            </h2>
+                            <button class="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                                Lihat Semua
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                <div class="w-2 h-12 bg-blue-500 rounded-full mr-4"></div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-900">Matematika - Kelas 5A</p>
+                                    <p class="text-sm text-gray-600">08:00 - 09:30</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full">Berlangsung</span>
+                            </div>
+                            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                <div class="w-2 h-12 bg-green-500 rounded-full mr-4"></div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-900">Bahasa Indonesia - Kelas 4B</p>
+                                    <p class="text-sm text-gray-600">10:00 - 11:30</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">Selanjutnya</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tugas Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <span class="mr-2">📋</span> Tugas Terbaru
+                            </h2>
+                            <button class="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                                Kelola Tugas
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Latihan Perkalian</p>
+                                    <p class="text-sm text-gray-600">Kelas 3A • Deadline: 25 Nov 2024</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-900">15/28</p>
+                                    <p class="text-xs text-gray-600">dikumpulkan</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Cerita Pendek</p>
+                                    <p class="text-sm text-gray-600">Kelas 5B • Deadline: 28 Nov 2024</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-900">8/25</p>
+                                    <p class="text-xs text-gray-600">dikumpulkan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="p-6 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-900">Menu Utama</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="showSection('jadwal')" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group">
+                                <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">📅</span>
+                                <span class="text-sm font-medium text-gray-700">Jadwal</span>
+                            </button>
+                            <button onclick="showSection('tugas')" class="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors group">
+                                <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">📝</span>
+                                <span class="text-sm font-medium text-gray-700">Tugas</span>
+                            </button>
+                            <button onclick="showSection('materi')" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors group">
+                                <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">📖</span>
+                                <span class="text-sm font-medium text-gray-700">Materi</span>
+                            </button>
+                            <button onclick="showSection('penilaian')" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors group">
+                                <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">📊</span>
+                                <span class="text-sm font-medium text-gray-700">Penilaian</span>
+                            </button>
+                            <button onclick="showSection('laporan')" class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors group">
+                                <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">📈</span>
+                                <span class="text-sm font-medium text-gray-700">Laporan</span>
+                            </button>
+                            <button onclick="showSection('manajemen')" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors group">
+                                <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">⚙️</span>
+                                <span class="text-sm font-medium text-gray-700">Manajemen</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="p-6 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Nilai matematika kelas 5A telah diinput</p>
+                                    <p class="text-xs text-gray-600">2 jam yang lalu</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Materi baru ditambahkan ke kelas 4B</p>
+                                    <p class="text-xs text-gray-600">5 jam yang lalu</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">Laporan bulanan telah dibuat</p>
+                                    <p class="text-xs text-gray-600">1 hari yang lalu</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Sections -->
+    <div id="sectionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <span class="text-2xl">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div id="modalContent" class="p-6">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            const modal = document.getElementById('sectionModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            switch(section) {
+                case 'jadwal':
+                    title.textContent = '📅 Jadwal Pelajaran';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <select class="px-3 py-2 border border-gray-300 rounded-lg">
+                                    <option>Semua Kelas</option>
+                                    <option>Kelas 1A</option>
+                                    <option>Kelas 2A</option>
+                                    <option>Kelas 3A</option>
+                                    <option>Kelas 4A</option>
+                                    <option>Kelas 5A</option>
+                                    <option>Kelas 6A</option>
+                                </select>
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">+ Tambah Jadwal</button>
+                            </div>
+                            <div class="grid grid-cols-7 gap-2 text-center text-sm font-medium text-gray-600 mb-2">
+                                <div>Senin</div><div>Selasa</div><div>Rabu</div><div>Kamis</div><div>Jumat</div><div>Sabtu</div><div>Minggu</div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-medium text-gray-900">Matematika - Kelas 5A</p>
+                                            <p class="text-sm text-gray-600">Senin, 08:00 - 09:30</p>
+                                        </div>
+                                        <button class="text-blue-600 hover:text-blue-800">Edit</button>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-medium text-gray-900">Bahasa Indonesia - Kelas 4B</p>
+                                            <p class="text-sm text-gray-600">Selasa, 10:00 - 11:30</p>
+                                        </div>
+                                        <button class="text-green-600 hover:text-green-800">Edit</button>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-medium text-gray-900">IPA - Kelas 6A</p>
+                                            <p class="text-sm text-gray-600">Rabu, 13:00 - 14:30</p>
+                                        </div>
+                                        <button class="text-yellow-600 hover:text-yellow-800">Edit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'tugas':
+                    title.textContent = '📝 Manajemen Tugas';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex space-x-2">
+                                    <select class="px-3 py-2 border border-gray-300 rounded-lg">
+                                        <option>Semua Status</option>
+                                        <option>Aktif</option>
+                                        <option>Selesai</option>
+                                        <option>Terlambat</option>
+                                    </select>
+                                    <select class="px-3 py-2 border border-gray-300 rounded-lg">
+                                        <option>Semua Kelas</option>
+                                        <option>Kelas 3A</option>
+                                        <option>Kelas 4B</option>
+                                        <option>Kelas 5A</option>
+                                    </select>
+                                </div>
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">+ Buat Tugas</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900">Latihan Perkalian</h4>
+                                            <p class="text-sm text-gray-600">Kelas 3A • Matematika</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-medium text-orange-600 bg-orange-100 rounded-full">Aktif</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-gray-600">Deadline: 25 Nov 2024</span>
+                                        <div class="flex items-center space-x-4">
+                                            <span class="text-gray-900 font-medium">15/28 dikumpulkan</span>
+                                            <button class="text-blue-600 hover:text-blue-800">Lihat Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900">Cerita Pendek</h4>
+                                            <p class="text-sm text-gray-600">Kelas 5B • Bahasa Indonesia</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-medium text-green-600 bg-green-100 rounded-full">Selesai</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-gray-600">Deadline: 20 Nov 2024</span>
+                                        <div class="flex items-center space-x-4">
+                                            <span class="text-gray-900 font-medium">25/25 dikumpulkan</span>
+                                            <button class="text-blue-600 hover:text-blue-800">Lihat Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900">Eksperimen Sains</h4>
+                                            <p class="text-sm text-gray-600">Kelas 4A • IPA</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-medium text-red-600 bg-red-100 rounded-full">Terlambat</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-gray-600">Deadline: 18 Nov 2024</span>
+                                        <div class="flex items-center space-x-4">
+                                            <span class="text-gray-900 font-medium">12/22 dikumpulkan</span>
+                                            <button class="text-blue-600 hover:text-blue-800">Lihat Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'materi':
+                    title.textContent = '📖 Materi Pembelajaran';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Matematika Kelas 5</h4>
+                                    <p class="text-sm text-gray-600">Perkalian dan Pembagian</p>
+                                </div>
+                                <button class="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-lg">Edit</button>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Bahasa Indonesia Kelas 4</h4>
+                                    <p class="text-sm text-gray-600">Cerita Rakyat</p>
+                                </div>
+                                <button class="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-lg">Edit</button>
+                            </div>
+                            <button class="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-300 hover:text-blue-600 transition-colors">
+                                + Tambah Materi Baru
+                            </button>
+                        </div>
+                    `;
+                    break;
+                case 'penilaian':
+                    title.textContent = '📊 Penilaian Siswa';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="p-4 bg-green-50 rounded-lg">
+                                    <p class="text-2xl font-bold text-green-600">85%</p>
+                                    <p class="text-sm text-gray-600">Nilai A</p>
+                                </div>
+                                <div class="p-4 bg-yellow-50 rounded-lg">
+                                    <p class="text-2xl font-bold text-yellow-600">12%</p>
+                                    <p class="text-sm text-gray-600">Nilai B</p>
+                                </div>
+                                <div class="p-4 bg-red-50 rounded-lg">
+                                    <p class="text-2xl font-bold text-red-600">3%</p>
+                                    <p class="text-sm text-gray-600">Nilai C</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span class="font-medium">Kelas 5A - Matematika</span>
+                                    <span class="text-green-600 font-semibold">8.5</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span class="font-medium">Kelas 4B - Bahasa Indonesia</span>
+                                    <span class="text-green-600 font-semibold">8.2</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'laporan':
+                    title.textContent = '📈 Laporan Sekolah';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <button class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <h4 class="font-medium text-gray-900">Laporan Harian</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Aktivitas hari ini</p>
+                                </button>
+                                <button class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <h4 class="font-medium text-gray-900">Laporan Mingguan</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Ringkasan minggu ini</p>
+                                </button>
+                                <button class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <h4 class="font-medium text-gray-900">Laporan Bulanan</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Data bulan ini</p>
+                                </button>
+                                <button class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <h4 class="font-medium text-gray-900">Laporan Semester</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Evaluasi semester</p>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'manajemen':
+                    title.textContent = '⚙️ Manajemen Sekolah';
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 gap-3">
+                                <button class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center">
+                                        <span class="mr-3">👥</span>
+                                        <span class="font-medium">Kelola Siswa</span>
+                                    </div>
+                                    <span class="text-gray-400">→</span>
+                                </button>
+                                <button class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center">
+                                        <span class="mr-3">👨‍🏫</span>
+                                        <span class="font-medium">Kelola Guru</span>
+                                    </div>
+                                    <span class="text-gray-400">→</span>
+                                </button>
+                                <button class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center">
+                                        <span class="mr-3">🏫</span>
+                                        <span class="font-medium">Kelola Kelas</span>
+                                    </div>
+                                    <span class="text-gray-400">→</span>
+                                </button>
+                                <button class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center">
+                                        <span class="mr-3">📚</span>
+                                        <span class="font-medium">Kelola Mata Pelajaran</span>
+                                    </div>
+                                    <span class="text-gray-400">→</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('sectionModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('sectionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96eacb5d15a6ea7b',t:'MTc1NTExNTE4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

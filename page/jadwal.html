@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SD Harapan Bangsa - Jadwal & Kalender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .calendar-day {
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .event-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        
+        .reminder-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-blue-500">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-500 text-white p-3 rounded-full">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">SD Harapan Bangsa</h1>
+                        <p class="text-gray-600">Sistem Jadwal & Kalender</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium reminder-pulse">
+                        <span class="event-dot bg-yellow-500"></span>
+                        3 Reminder Aktif
+                    </div>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="container mx-auto px-6 py-6">
+        <div class="bg-white rounded-xl shadow-lg p-2 mb-6">
+            <div class="flex space-x-2">
+                <button onclick="showTab('calendar')" id="calendar-tab" class="tab-btn bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all">
+                    📅 Kalender Pelajaran
+                </button>
+                <button onclick="showTab('schedule')" id="schedule-tab" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-6 py-3 rounded-lg font-medium transition-all">
+                    📚 Jadwal Kelas
+                </button>
+                <button onclick="showTab('exams')" id="exams-tab" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-6 py-3 rounded-lg font-medium transition-all">
+                    📝 Ujian & Kegiatan
+                </button>
+                <button onclick="showTab('reminders')" id="reminders-tab" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-6 py-3 rounded-lg font-medium transition-all">
+                    🔔 Reminder
+                </button>
+            </div>
+        </div>
+
+        <!-- Calendar Tab -->
+        <div id="calendar-content" class="tab-content">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Calendar -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">November 2024</h2>
+                        <div class="flex space-x-2">
+                            <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendar Grid -->
+                    <div class="grid grid-cols-7 gap-2 mb-4">
+                        <div class="text-center font-medium text-gray-500 py-2">Min</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Sen</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Sel</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Rab</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Kam</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Jum</div>
+                        <div class="text-center font-medium text-gray-500 py-2">Sab</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-2" id="calendar-grid">
+                        <!-- Calendar days will be generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Class Filter & Events -->
+                <div class="space-y-6">
+                    <!-- Class Filter -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Filter Kelas</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-500 rounded">
+                                <span class="text-gray-700">Kelas 1A</span>
+                                <span class="event-dot bg-red-500"></span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-500 rounded">
+                                <span class="text-gray-700">Kelas 2B</span>
+                                <span class="event-dot bg-blue-500"></span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-500 rounded">
+                                <span class="text-gray-700">Kelas 3A</span>
+                                <span class="event-dot bg-green-500"></span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" class="w-4 h-4 text-blue-500 rounded">
+                                <span class="text-gray-700">Kelas 4B</span>
+                                <span class="event-dot bg-yellow-500"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Today's Events -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Kegiatan Hari Ini</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3 p-3 bg-red-50 rounded-lg">
+                                <span class="event-dot bg-red-500 mt-2"></span>
+                                <div>
+                                    <p class="font-medium text-gray-800">Matematika - Kelas 1A</p>
+                                    <p class="text-sm text-gray-600">08:00 - 09:30</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                                <span class="event-dot bg-blue-500 mt-2"></span>
+                                <div>
+                                    <p class="font-medium text-gray-800">Bahasa Indonesia - Kelas 2B</p>
+                                    <p class="text-sm text-gray-600">10:00 - 11:30</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
+                                <span class="event-dot bg-green-500 mt-2"></span>
+                                <div>
+                                    <p class="font-medium text-gray-800">IPA - Kelas 3A</p>
+                                    <p class="text-sm text-gray-600">13:00 - 14:30</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Tab -->
+        <div id="schedule-content" class="tab-content hidden">
+            <div class="grid lg:grid-cols-4 gap-6">
+                <!-- Class Selection -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Pilih Kelas</h3>
+                    <div class="space-y-2">
+                        <button onclick="showClassSchedule('1A')" class="class-btn w-full text-left p-3 bg-red-50 border-l-4 border-red-500 rounded-lg hover:bg-red-100 transition-colors">
+                            <div class="font-medium text-gray-800">Kelas 1A</div>
+                            <div class="text-sm text-gray-600">25 Siswa</div>
+                        </button>
+                        <button onclick="showClassSchedule('2B')" class="class-btn w-full text-left p-3 bg-blue-50 border-l-4 border-blue-500 rounded-lg hover:bg-blue-100 transition-colors">
+                            <div class="font-medium text-gray-800">Kelas 2B</div>
+                            <div class="text-sm text-gray-600">28 Siswa</div>
+                        </button>
+                        <button onclick="showClassSchedule('3A')" class="class-btn w-full text-left p-3 bg-green-50 border-l-4 border-green-500 rounded-lg hover:bg-green-100 transition-colors">
+                            <div class="font-medium text-gray-800">Kelas 3A</div>
+                            <div class="text-sm text-gray-600">26 Siswa</div>
+                        </button>
+                        <button onclick="showClassSchedule('4B')" class="class-btn w-full text-left p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg hover:bg-yellow-100 transition-colors">
+                            <div class="font-medium text-gray-800">Kelas 4B</div>
+                            <div class="text-sm text-gray-600">24 Siswa</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Schedule Display -->
+                <div class="lg:col-span-3 bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Jadwal Kelas <span id="selected-class">1A</span></h3>
+                        <div class="flex space-x-2">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                📥 Export PDF
+                            </button>
+                            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                ✏️ Edit Jadwal
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Schedule -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="border border-gray-200 p-3 text-left font-medium text-gray-700">Waktu</th>
+                                    <th class="border border-gray-200 p-3 text-center font-medium text-gray-700">Senin</th>
+                                    <th class="border border-gray-200 p-3 text-center font-medium text-gray-700">Selasa</th>
+                                    <th class="border border-gray-200 p-3 text-center font-medium text-gray-700">Rabu</th>
+                                    <th class="border border-gray-200 p-3 text-center font-medium text-gray-700">Kamis</th>
+                                    <th class="border border-gray-200 p-3 text-center font-medium text-gray-700">Jumat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-table">
+                                <!-- Schedule will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exams Tab -->
+        <div id="exams-content" class="tab-content hidden">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Upcoming Exams -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Ujian & Kegiatan Mendatang</h3>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            ➕ Tambah Kegiatan
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">Ujian Tengah Semester - Matematika</h4>
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">URGENT</span>
+                            </div>
+                            <p class="text-gray-600 mb-2">Kelas 1A, 2B, 3A</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📅 25 November 2024</span>
+                                <span>⏰ 08:00 - 10:00</span>
+                                <span>📍 Ruang Kelas</span>
+                            </div>
+                        </div>
+
+                        <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">Lomba Mewarnai</h4>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">KEGIATAN</span>
+                            </div>
+                            <p class="text-gray-600 mb-2">Seluruh Kelas</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📅 28 November 2024</span>
+                                <span>⏰ 09:00 - 11:00</span>
+                                <span>📍 Aula Sekolah</span>
+                            </div>
+                        </div>
+
+                        <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">Ujian Praktik IPA</h4>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">UJIAN</span>
+                            </div>
+                            <p class="text-gray-600 mb-2">Kelas 3A, 4B</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📅 30 November 2024</span>
+                                <span>⏰ 13:00 - 15:00</span>
+                                <span>📍 Lab IPA</span>
+                            </div>
+                        </div>
+
+                        <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">Rapat Orang Tua</h4>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">RAPAT</span>
+                            </div>
+                            <p class="text-gray-600 mb-2">Seluruh Orang Tua</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📅 2 Desember 2024</span>
+                                <span>⏰ 14:00 - 16:00</span>
+                                <span>📍 Aula Sekolah</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Statistik Bulan Ini</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Total Ujian</span>
+                                <span class="font-bold text-2xl text-red-500">8</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Kegiatan Sekolah</span>
+                                <span class="font-bold text-2xl text-blue-500">5</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Rapat</span>
+                                <span class="font-bold text-2xl text-green-500">3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Filter Kegiatan</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-4 h-4 text-red-500 rounded">
+                                <span class="text-gray-700">Ujian</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-500 rounded">
+                                <span class="text-gray-700">Kegiatan</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-4 h-4 text-green-500 rounded">
+                                <span class="text-gray-700">Rapat</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" class="w-4 h-4 text-yellow-500 rounded">
+                                <span class="text-gray-700">Libur</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reminders Tab -->
+        <div id="reminders-content" class="tab-content hidden">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Active Reminders -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Reminder Aktif</h3>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            ➕ Buat Reminder
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-red-500 text-white p-2 rounded-full reminder-pulse">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">Ujian Matematika Besok!</h4>
+                                        <p class="text-gray-600 text-sm">Kelas 1A - Persiapkan soal dan lembar jawaban</p>
+                                        <p class="text-red-600 text-xs font-medium mt-1">⏰ 24 November 2024, 07:30</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-gray-400 hover:text-gray-600 p-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="text-red-400 hover:text-red-600 p-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-blue-500 text-white p-2 rounded-full">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">Rapat Orang Tua Minggu Depan</h4>
+                                        <p class="text-gray-600 text-sm">Kirim undangan dan persiapkan materi presentasi</p>
+                                        <p class="text-blue-600 text-xs font-medium mt-1">⏰ 1 Desember 2024, 10:00</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-gray-400 hover:text-gray-600 p-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="text-red-400 hover:text-red-600 p-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-green-500 text-white p-2 rounded-full">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">Persiapan Lomba Mewarnai</h4>
+                                        <p class="text-gray-600 text-sm">Siapkan kertas, crayon, dan hadiah untuk pemenang</p>
+                                        <p class="text-green-600 text-xs font-medium mt-1">⏰ 27 November 2024, 08:00</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-gray-400 hover:text-gray-600 p-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="text-red-400 hover:text-red-600 p-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reminder Settings -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Pengaturan Reminder</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Notifikasi Email</label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-500 rounded">
+                                    <span class="text-gray-700">Aktifkan email reminder</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Waktu Reminder Default</label>
+                                <select class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option>1 hari sebelumnya</option>
+                                    <option>2 hari sebelumnya</option>
+                                    <option>1 minggu sebelumnya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Target Reminder</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-500 rounded">
+                                        <span class="text-gray-700">Guru</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-4 h-4 text-blue-500 rounded">
+                                        <span class="text-gray-700">Siswa</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-4 h-4 text-blue-500 rounded">
+                                        <span class="text-gray-700">Orang Tua</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Statistik Reminder</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Reminder Aktif</span>
+                                <span class="font-bold text-blue-500">3</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Terkirim Bulan Ini</span>
+                                <span class="font-bold text-green-500">24</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Tingkat Baca</span>
+                                <span class="font-bold text-yellow-500">87%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Reset all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+            document.getElementById(tabName + '-content').classList.add('fade-in');
+            
+            // Highlight selected tab button
+            const selectedBtn = document.getElementById(tabName + '-tab');
+            selectedBtn.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+            selectedBtn.classList.add('bg-blue-500', 'text-white');
+        }
+
+        // Generate calendar
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            const daysInMonth = 30;
+            const startDay = 5; // November 1st is Friday (0=Sunday, 1=Monday, etc.)
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'h-12';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day h-12 p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 transition-all';
+                
+                // Highlight today (assume today is 23rd)
+                if (day === 23) {
+                    dayElement.classList.add('bg-blue-500', 'text-white', 'font-bold');
+                }
+                
+                // Add events to certain days
+                let eventDots = '';
+                if (day === 25) eventDots = '<div class="flex space-x-1 mt-1"><span class="event-dot bg-red-500"></span><span class="event-dot bg-blue-500"></span></div>';
+                if (day === 28) eventDots = '<div class="flex space-x-1 mt-1"><span class="event-dot bg-blue-500"></span></div>';
+                if (day === 30) eventDots = '<div class="flex space-x-1 mt-1"><span class="event-dot bg-green-500"></span></div>';
+                
+                dayElement.innerHTML = `
+                    <div class="text-sm font-medium">${day}</div>
+                    ${eventDots}
+                `;
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        // Show class schedule
+        function showClassSchedule(className) {
+            document.getElementById('selected-class').textContent = className;
+            
+            const schedules = {
+                '1A': [
+                    ['07:30-08:30', 'Matematika', 'Bahasa Indonesia', 'IPA', 'IPS', 'Seni Budaya'],
+                    ['08:30-09:30', 'Bahasa Indonesia', 'Matematika', 'Bahasa Indonesia', 'Matematika', 'Olahraga'],
+                    ['09:30-10:00', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT'],
+                    ['10:00-11:00', 'IPA', 'IPS', 'Matematika', 'Bahasa Indonesia', 'Agama'],
+                    ['11:00-12:00', 'IPS', 'Seni Budaya', 'IPS', 'IPA', 'PKn'],
+                    ['12:00-13:00', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT'],
+                    ['13:00-14:00', 'Agama', 'Olahraga', 'Agama', 'Seni Budaya', '-'],
+                    ['14:00-15:00', 'PKn', 'Agama', 'PKn', 'Olahraga', '-']
+                ],
+                '2B': [
+                    ['07:30-08:30', 'Bahasa Indonesia', 'Matematika', 'IPA', 'Bahasa Indonesia', 'Matematika'],
+                    ['08:30-09:30', 'Matematika', 'Bahasa Indonesia', 'Matematika', 'IPA', 'Bahasa Indonesia'],
+                    ['09:30-10:00', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT'],
+                    ['10:00-11:00', 'IPA', 'IPS', 'Bahasa Indonesia', 'Matematika', 'IPS'],
+                    ['11:00-12:00', 'IPS', 'IPA', 'IPS', 'Seni Budaya', 'Agama'],
+                    ['12:00-13:00', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT', 'ISTIRAHAT'],
+                    ['13:00-14:00', 'Seni Budaya', 'Agama', 'Olahraga', 'Agama', 'Olahraga'],
+                    ['14:00-15:00', 'Olahraga', 'PKn', 'Agama', 'PKn', '-']
+                ]
+            };
+            
+            const schedule = schedules[className] || schedules['1A'];
+            const tableBody = document.getElementById('schedule-table');
+            tableBody.innerHTML = '';
+            
+            schedule.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="border border-gray-200 p-3 font-medium text-gray-700 bg-gray-50">${row[0]}</td>
+                    <td class="border border-gray-200 p-3 text-center ${row[1] === 'ISTIRAHAT' ? 'bg-yellow-50 text-yellow-700 font-medium' : row[1] === '-' ? 'bg-gray-50 text-gray-400' : 'hover:bg-blue-50'}">${row[1]}</td>
+                    <td class="border border-gray-200 p-3 text-center ${row[2] === 'ISTIRAHAT' ? 'bg-yellow-50 text-yellow-700 font-medium' : row[2] === '-' ? 'bg-gray-50 text-gray-400' : 'hover:bg-blue-50'}">${row[2]}</td>
+                    <td class="border border-gray-200 p-3 text-center ${row[3] === 'ISTIRAHAT' ? 'bg-yellow-50 text-yellow-700 font-medium' : row[3] === '-' ? 'bg-gray-50 text-gray-400' : 'hover:bg-blue-50'}">${row[3]}</td>
+                    <td class="border border-gray-200 p-3 text-center ${row[4] === 'ISTIRAHAT' ? 'bg-yellow-50 text-yellow-700 font-medium' : row[4] === '-' ? 'bg-gray-50 text-gray-400' : 'hover:bg-blue-50'}">${row[4]}</td>
+                    <td class="border border-gray-200 p-3 text-center ${row[5] === 'ISTIRAHAT' ? 'bg-yellow-50 text-yellow-700 font-medium' : row[5] === '-' ? 'bg-gray-50 text-gray-400' : 'hover:bg-blue-50'}">${row[5]}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCalendar();
+            showClassSchedule('1A');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96eabb9f17f1b5cc',t:'MTc1NTExNDUzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

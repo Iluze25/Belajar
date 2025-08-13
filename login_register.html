@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan & Keamanan - SD Nusantara</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-blue-500">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-500 text-white p-3 rounded-full">
+                        <i class="fas fa-shield-alt text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">SD Nusantara</h1>
+                        <p class="text-sm text-gray-600">Sistem Pengaturan & Keamanan</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="currentTime"></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-6 py-8">
+        <!-- Login Section -->
+        <div id="loginSection" class="max-w-md mx-auto bg-white rounded-xl shadow-xl p-8 fade-in">
+            <div class="text-center mb-8">
+                <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-3xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Login Sistem</h2>
+                <p class="text-gray-600">Masuk dengan akun Anda</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pengguna</label>
+                    <select id="userType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="guru">👨‍🏫 Guru</option>
+                        <option value="siswa">👨‍🎓 Siswa</option>
+                        <option value="orangtua">👨‍👩‍👧‍👦 Orang Tua</option>
+                        <option value="admin">🔧 Administrator</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username/Email</label>
+                    <input type="text" id="username" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Masukkan username atau email">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12" placeholder="Masukkan password">
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-eye" id="passwordToggle"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+                </button>
+
+                <div class="text-center space-y-2">
+                    <button type="button" onclick="showResetPassword()" class="text-blue-600 hover:text-blue-800 text-sm block">
+                        Lupa Password?
+                    </button>
+                    <div class="text-gray-500 text-sm">atau</div>
+                    <button type="button" onclick="showRegister()" class="text-green-600 hover:text-green-800 text-sm font-medium">
+                        Daftar Akun Baru
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Reset Password Modal -->
+        <div id="resetPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 fade-in">
+                <div class="text-center mb-6">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-key text-2xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Reset Password</h3>
+                    <p class="text-gray-600 text-sm mt-2">Masukkan email untuk reset password</p>
+                </div>
+
+                <form onsubmit="handleResetPassword(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="resetEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="email@example.com">
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button type="button" onclick="hideResetPassword()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                            Kirim
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 fade-in max-h-screen overflow-y-auto">
+                <div class="text-center mb-6">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-plus text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Daftar Akun Baru</h3>
+                    <p class="text-gray-600 text-sm mt-2">Lengkapi data untuk membuat akun</p>
+                </div>
+
+                <form onsubmit="handleRegister(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pengguna</label>
+                        <select id="regUserType" onchange="updateRegisterForm()" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih Tipe Pengguna</option>
+                            <option value="guru">👨‍🏫 Guru</option>
+                            <option value="siswa">👨‍🎓 Siswa</option>
+                            <option value="orangtua">👨‍👩‍👧‍👦 Orang Tua</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Depan</label>
+                            <input type="text" id="regFirstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Nama depan">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Belakang</label>
+                            <input type="text" id="regLastName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Nama belakang">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="regEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="email@example.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+                        <input type="tel" id="regPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="08xxxxxxxxxx">
+                    </div>
+
+                    <!-- Dynamic fields based on user type -->
+                    <div id="dynamicFields" class="space-y-4"></div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" id="regUsername" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Username unik">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" id="regPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent pr-12" placeholder="Minimal 6 karakter">
+                            <button type="button" onclick="toggleRegPassword()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-eye" id="regPasswordToggle"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xs text-gray-600">Kekuatan password:</div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div id="passwordStrength" class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password</label>
+                        <input type="password" id="regConfirmPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Ulangi password">
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <input type="checkbox" id="agreeTerms" required class="mt-1 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                        <label for="agreeTerms" class="text-sm text-gray-700">
+                            Saya setuju dengan <button type="button" onclick="showTerms()" class="text-green-600 hover:text-green-800 underline">Syarat & Ketentuan</button> dan <button type="button" onclick="showPrivacy()" class="text-green-600 hover:text-green-800 underline">Kebijakan Privasi</button>
+                        </label>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button type="button" onclick="hideRegister()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-user-plus mr-2"></i>Daftar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="hidden">
+            <!-- User Info Bar -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 fade-in">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div id="userAvatar" class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                            U
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800" id="userName">Nama Pengguna</h3>
+                            <p class="text-gray-600" id="userRole">Role Pengguna</p>
+                            <p class="text-sm text-gray-500">Login terakhir: <span id="lastLogin"></span></p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="flex items-center space-x-2 text-green-600 mb-2">
+                            <i class="fas fa-shield-check"></i>
+                            <span class="text-sm font-medium">Akun Terverifikasi</span>
+                        </div>
+                        <button onclick="showChangePassword()" class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="fas fa-key mr-1"></i>Ubah Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Access Control -->
+                <div class="bg-white rounded-xl shadow-lg p-6 fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-users-cog text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">Kontrol Akses</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Hak Akses Saat Ini</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium" id="currentAccess">GURU</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Status Akun</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">AKTIF</span>
+                        </div>
+                        <button onclick="showAccessDetails()" class="w-full bg-green-50 hover:bg-green-100 text-green-700 py-2 px-4 rounded-lg text-sm transition-colors">
+                            <i class="fas fa-eye mr-2"></i>Lihat Detail Akses
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Protection -->
+                <div class="bg-white rounded-xl shadow-lg p-6 fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-shield-alt text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">Proteksi Data</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Enkripsi Data</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">AKTIF</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Backup Otomatis</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">HARIAN</span>
+                        </div>
+                        <button onclick="showDataProtection()" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 py-2 px-4 rounded-lg text-sm transition-colors">
+                            <i class="fas fa-cog mr-2"></i>Pengaturan Privasi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Database Backup -->
+                <div class="bg-white rounded-xl shadow-lg p-6 fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-database text-orange-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">Backup Database</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Backup Terakhir</span>
+                            <span class="text-xs text-gray-500">2 jam lalu</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Status</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">BERHASIL</span>
+                        </div>
+                        <button onclick="performBackup()" class="w-full bg-orange-50 hover:bg-orange-100 text-orange-700 py-2 px-4 rounded-lg text-sm transition-colors">
+                            <i class="fas fa-download mr-2"></i>Backup Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Settings Panels -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Security Logs -->
+                <div class="bg-white rounded-xl shadow-lg p-6 fade-in">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-gray-800">
+                            <i class="fas fa-history text-blue-600 mr-2"></i>Log Keamanan
+                        </h3>
+                        <button onclick="refreshLogs()" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-3" id="securityLogs">
+                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-sign-in-alt text-green-600 mr-3"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Login Berhasil</p>
+                                    <p class="text-xs text-gray-500">10:30 WIB - IP: 192.168.1.100</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-green-600">Hari ini</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-key text-blue-600 mr-3"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Password Diubah</p>
+                                    <p class="text-xs text-gray-500">Kemarin 15:45 WIB</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-blue-600">1 hari lalu</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Login Gagal</p>
+                                    <p class="text-xs text-gray-500">2 hari lalu 09:15 WIB</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-yellow-600">2 hari lalu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings -->
+                <div class="bg-white rounded-xl shadow-lg p-6 fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-6">
+                        <i class="fas fa-user-shield text-purple-600 mr-2"></i>Pengaturan Privasi
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Visibilitas Profil</p>
+                                <p class="text-sm text-gray-600">Siapa yang dapat melihat profil Anda</p>
+                            </div>
+                            <select class="bg-white border border-gray-300 rounded px-3 py-1 text-sm">
+                                <option>Hanya Guru</option>
+                                <option>Semua Pengguna</option>
+                                <option>Privat</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Notifikasi Email</p>
+                                <p class="text-sm text-gray-600">Terima pemberitahuan via email</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Berbagi Data Akademik</p>
+                                <p class="text-sm text-gray-600">Izinkan berbagi nilai dengan orang tua</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Modal -->
+        <div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 fade-in">
+                <div class="text-center mb-6">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-key text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Ubah Password</h3>
+                </div>
+
+                <form onsubmit="handleChangePassword(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password Lama</label>
+                        <input type="password" id="oldPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+                        <input type="password" id="newPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
+                        <input type="password" id="confirmPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button type="button" onclick="hideChangePassword()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                            Ubah Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let userPermissions = {
+            guru: ['read_students', 'write_grades', 'manage_class', 'view_reports'],
+            siswa: ['read_own_grades', 'view_schedule', 'submit_assignments'],
+            orangtua: ['read_child_grades', 'view_child_schedule', 'communicate_teacher'],
+            admin: ['full_access', 'manage_users', 'system_settings', 'backup_restore']
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('passwordToggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const userType = document.getElementById('userType').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate login validation
+            if (username && password) {
+                currentUser = {
+                    type: userType,
+                    username: username,
+                    name: getDisplayName(userType, username),
+                    lastLogin: new Date().toLocaleString('id-ID')
+                };
+
+                showMessage('Login berhasil! Selamat datang.', 'success');
+                showDashboard();
+            } else {
+                showMessage('Username dan password harus diisi!', 'error');
+            }
+        }
+
+        function getDisplayName(userType, username) {
+            const names = {
+                guru: 'Bapak/Ibu ' + username,
+                siswa: username,
+                orangtua: 'Bapak/Ibu ' + username,
+                admin: 'Administrator ' + username
+            };
+            return names[userType] || username;
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            
+            // Update user info
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = getRoleDisplay(currentUser.type);
+            document.getElementById('lastLogin').textContent = currentUser.lastLogin;
+            document.getElementById('currentAccess').textContent = currentUser.type.toUpperCase();
+            
+            // Update avatar
+            const avatar = document.getElementById('userAvatar');
+            avatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            avatar.className = `w-16 h-16 ${getRoleColor(currentUser.type)} rounded-full flex items-center justify-center text-white text-2xl font-bold`;
+        }
+
+        function getRoleDisplay(type) {
+            const roles = {
+                guru: '👨‍🏫 Guru',
+                siswa: '👨‍🎓 Siswa',
+                orangtua: '👨‍👩‍👧‍👦 Orang Tua',
+                admin: '🔧 Administrator'
+            };
+            return roles[type] || type;
+        }
+
+        function getRoleColor(type) {
+            const colors = {
+                guru: 'bg-blue-500',
+                siswa: 'bg-green-500',
+                orangtua: 'bg-purple-500',
+                admin: 'bg-red-500'
+            };
+            return colors[type] || 'bg-gray-500';
+        }
+
+        function showResetPassword() {
+            document.getElementById('resetPasswordModal').classList.remove('hidden');
+            document.getElementById('resetPasswordModal').classList.add('flex');
+        }
+
+        function hideResetPassword() {
+            document.getElementById('resetPasswordModal').classList.add('hidden');
+            document.getElementById('resetPasswordModal').classList.remove('flex');
+        }
+
+        function handleResetPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            
+            if (email) {
+                showMessage('Link reset password telah dikirim ke email Anda!', 'success');
+                hideResetPassword();
+                document.getElementById('resetEmail').value = '';
+            }
+        }
+
+        function showChangePassword() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('changePasswordModal').classList.add('flex');
+        }
+
+        function hideChangePassword() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+            document.getElementById('changePasswordModal').classList.remove('flex');
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function handleChangePassword(event) {
+            event.preventDefault();
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showMessage('Password baru dan konfirmasi tidak cocok!', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showMessage('Password baru minimal 6 karakter!', 'error');
+                return;
+            }
+
+            showMessage('Password berhasil diubah!', 'success');
+            hideChangePassword();
+        }
+
+        function showAccessDetails() {
+            const permissions = userPermissions[currentUser.type] || [];
+            const permissionText = permissions.map(p => p.replace(/_/g, ' ')).join(', ');
+            showMessage(`Hak akses Anda: ${permissionText}`, 'info');
+        }
+
+        function showDataProtection() {
+            showMessage('Pengaturan privasi data telah dikonfigurasi dengan standar keamanan tinggi.', 'info');
+        }
+
+        function performBackup() {
+            showMessage('Proses backup database dimulai...', 'info');
+            
+            setTimeout(() => {
+                showMessage('Backup database berhasil! Data tersimpan dengan aman.', 'success');
+            }, 2000);
+        }
+
+        function refreshLogs() {
+            showMessage('Log keamanan diperbarui.', 'info');
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                currentUser = null;
+                document.getElementById('dashboardSection').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                showMessage('Anda telah keluar dari sistem.', 'info');
+            }
+        }
+
+        function showRegister() {
+            document.getElementById('registerModal').classList.remove('hidden');
+            document.getElementById('registerModal').classList.add('flex');
+        }
+
+        function hideRegister() {
+            document.getElementById('registerModal').classList.add('hidden');
+            document.getElementById('registerModal').classList.remove('flex');
+            clearRegisterForm();
+        }
+
+        function clearRegisterForm() {
+            document.getElementById('regUserType').value = '';
+            document.getElementById('regFirstName').value = '';
+            document.getElementById('regLastName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPhone').value = '';
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regConfirmPassword').value = '';
+            document.getElementById('agreeTerms').checked = false;
+            document.getElementById('dynamicFields').innerHTML = '';
+            document.getElementById('passwordStrength').style.width = '0%';
+        }
+
+        function updateRegisterForm() {
+            const userType = document.getElementById('regUserType').value;
+            const dynamicFields = document.getElementById('dynamicFields');
+            
+            dynamicFields.innerHTML = '';
+
+            if (userType === 'guru') {
+                dynamicFields.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">NIP (Nomor Induk Pegawai)</label>
+                        <input type="text" id="regNIP" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="NIP">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
+                        <select id="regSubject" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih Mata Pelajaran</option>
+                            <option value="matematika">Matematika</option>
+                            <option value="bahasa_indonesia">Bahasa Indonesia</option>
+                            <option value="ipa">IPA</option>
+                            <option value="ips">IPS</option>
+                            <option value="bahasa_inggris">Bahasa Inggris</option>
+                            <option value="pjok">PJOK</option>
+                            <option value="seni_budaya">Seni Budaya</option>
+                            <option value="agama">Pendidikan Agama</option>
+                        </select>
+                    </div>
+                `;
+            } else if (userType === 'siswa') {
+                dynamicFields.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">NISN (Nomor Induk Siswa Nasional)</label>
+                        <input type="text" id="regNISN" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="NISN">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                            <select id="regClass" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="">Pilih Kelas</option>
+                                <option value="1">Kelas 1</option>
+                                <option value="2">Kelas 2</option>
+                                <option value="3">Kelas 3</option>
+                                <option value="4">Kelas 4</option>
+                                <option value="5">Kelas 5</option>
+                                <option value="6">Kelas 6</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Rombel</label>
+                            <select id="regRombel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="">Pilih Rombel</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+                        <input type="date" id="regBirthDate" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                `;
+            } else if (userType === 'orangtua') {
+                dynamicFields.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">NISN Anak</label>
+                        <input type="text" id="regChildNISN" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="NISN anak yang terdaftar">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Anak</label>
+                        <input type="text" id="regChildName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Nama lengkap anak">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Hubungan dengan Anak</label>
+                        <select id="regRelation" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih Hubungan</option>
+                            <option value="ayah">Ayah</option>
+                            <option value="ibu">Ibu</option>
+                            <option value="wali">Wali</option>
+                        </select>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleRegPassword() {
+            const passwordInput = document.getElementById('regPassword');
+            const toggleIcon = document.getElementById('regPasswordToggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // Password strength checker
+        document.addEventListener('DOMContentLoaded', function() {
+            const regPassword = document.getElementById('regPassword');
+            if (regPassword) {
+                regPassword.addEventListener('input', checkPasswordStrength);
+            }
+        });
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('regPassword').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            let strength = 0;
+            let color = 'bg-red-500';
+
+            if (password.length >= 6) strength += 20;
+            if (password.length >= 8) strength += 20;
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+
+            if (strength >= 80) color = 'bg-green-500';
+            else if (strength >= 60) color = 'bg-yellow-500';
+            else if (strength >= 40) color = 'bg-orange-500';
+
+            strengthBar.className = `${color} h-2 rounded-full transition-all duration-300`;
+            strengthBar.style.width = `${strength}%`;
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const userType = document.getElementById('regUserType').value;
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            // Validation
+            if (!userType) {
+                showMessage('Pilih tipe pengguna terlebih dahulu!', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('Password dan konfirmasi password tidak cocok!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password minimal 6 karakter!', 'error');
+                return;
+            }
+
+            if (!agreeTerms) {
+                showMessage('Anda harus menyetujui syarat dan ketentuan!', 'error');
+                return;
+            }
+
+            // Validate phone number format
+            if (!/^08[0-9]{8,11}$/.test(phone)) {
+                showMessage('Format nomor telepon tidak valid! Gunakan format 08xxxxxxxxxx', 'error');
+                return;
+            }
+
+            // Validate email format
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage('Format email tidak valid!', 'error');
+                return;
+            }
+
+            // Type-specific validation
+            if (userType === 'guru') {
+                const nip = document.getElementById('regNIP').value;
+                const subject = document.getElementById('regSubject').value;
+                if (!nip || !subject) {
+                    showMessage('NIP dan mata pelajaran harus diisi!', 'error');
+                    return;
+                }
+            } else if (userType === 'siswa') {
+                const nisn = document.getElementById('regNISN').value;
+                const kelas = document.getElementById('regClass').value;
+                const rombel = document.getElementById('regRombel').value;
+                const birthDate = document.getElementById('regBirthDate').value;
+                if (!nisn || !kelas || !rombel || !birthDate) {
+                    showMessage('Semua data siswa harus diisi!', 'error');
+                    return;
+                }
+            } else if (userType === 'orangtua') {
+                const childNISN = document.getElementById('regChildNISN').value;
+                const childName = document.getElementById('regChildName').value;
+                const relation = document.getElementById('regRelation').value;
+                if (!childNISN || !childName || !relation) {
+                    showMessage('Semua data orang tua harus diisi!', 'error');
+                    return;
+                }
+            }
+
+            // Simulate registration process
+            showMessage('Pendaftaran berhasil! Akun Anda sedang diverifikasi oleh admin.', 'success');
+            hideRegister();
+        }
+
+        function showTerms() {
+            showMessage('Syarat & Ketentuan: Pengguna wajib menjaga kerahasiaan akun dan menggunakan sistem sesuai ketentuan sekolah.', 'info');
+        }
+
+        function showPrivacy() {
+            showMessage('Kebijakan Privasi: Data pribadi Anda akan dijaga kerahasiaannya dan hanya digunakan untuk keperluan pendidikan.', 'info');
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle'
+            };
+
+            messageDiv.className = `${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg mb-4 flex items-center fade-in`;
+            messageDiv.innerHTML = `
+                <i class="${icons[type]} mr-3"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(messageDiv);
+
+            setTimeout(() => {
+                if (messageDiv.parentElement) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96eac75c868dea7b',t:'MTc1NTExNTAxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

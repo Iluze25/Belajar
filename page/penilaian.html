@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Penilaian SD - Dashboard Guru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; }
+        }
+        
+        .print-only { display: none; }
+        
+        .grade-input:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-blue-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-500 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Sistem Penilaian SD</h1>
+                        <p class="text-sm text-gray-600">Dashboard Guru - Kelola Nilai Siswa</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">Semester: <strong>Ganjil 2024/2025</strong></span>
+                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                        Kelas 5A
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-xl shadow-lg mb-8 overflow-hidden">
+            <div class="flex border-b border-gray-200">
+                <button onclick="showTab('input')" id="tab-input" class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all duration-200 tab-active">
+                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Input Nilai
+                </button>
+                <button onclick="showTab('rekap')" id="tab-rekap" class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all duration-200 text-gray-600 hover:text-blue-600">
+                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Rekap Nilai
+                </button>
+                <button onclick="showTab('rapor')" id="tab-rapor" class="tab-button flex-1 py-4 px-6 text-center font-medium transition-all duration-200 text-gray-600 hover:text-blue-600">
+                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Cetak Rapor
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Content: Input Nilai -->
+        <div id="content-input" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Form Input -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Input Nilai Siswa
+                        </h2>
+                        
+                        <form id="gradeForm" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Siswa</label>
+                                    <select id="studentSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="">Pilih Siswa...</option>
+                                        <option value="Ahmad Rizki">Ahmad Rizki</option>
+                                        <option value="Siti Nurhaliza">Siti Nurhaliza</option>
+                                        <option value="Budi Santoso">Budi Santoso</option>
+                                        <option value="Dewi Sartika">Dewi Sartika</option>
+                                        <option value="Eko Prasetyo">Eko Prasetyo</option>
+                                        <option value="Fitri Handayani">Fitri Handayani</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
+                                    <select id="subjectSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="">Pilih Mata Pelajaran...</option>
+                                        <option value="Matematika">Matematika</option>
+                                        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                        <option value="IPA">IPA</option>
+                                        <option value="IPS">IPS</option>
+                                        <option value="PKn">PKn</option>
+                                        <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nilai Harian</label>
+                                    <input type="number" id="dailyGrade" min="0" max="100" class="grade-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0-100">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nilai Tugas</label>
+                                    <input type="number" id="assignmentGrade" min="0" max="100" class="grade-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0-100">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nilai Ujian</label>
+                                    <input type="number" id="examGrade" min="0" max="100" class="grade-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0-100">
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-blue-800">Rata-rata Otomatis:</span>
+                                    <span id="averageDisplay" class="text-2xl font-bold text-blue-600">0</span>
+                                </div>
+                                <div class="text-xs text-blue-600 mt-1">
+                                    Formula: (Harian × 30% + Tugas × 30% + Ujian × 40%)
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105">
+                                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Simpan Nilai
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistik Kelas</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Total Siswa</span>
+                                <span class="font-bold text-blue-600">25</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Nilai Tertinggi</span>
+                                <span class="font-bold text-green-600">95</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Nilai Terendah</span>
+                                <span class="font-bold text-red-600">65</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Rata-rata Kelas</span>
+                                <span class="font-bold text-purple-600">82.5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Mata Pelajaran</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm">Matematika</span>
+                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">25 nilai</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm">B. Indonesia</span>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">25 nilai</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm">IPA</span>
+                                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">20 nilai</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Rekap Nilai -->
+        <div id="content-rekap" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                        <h2 class="text-xl font-bold text-gray-900">Rekap Nilai Semester</h2>
+                        <div class="flex space-x-3">
+                            <select id="filterSubject" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">Semua Mata Pelajaran</option>
+                                <option value="Matematika">Matematika</option>
+                                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                <option value="IPA">IPA</option>
+                            </select>
+                            <button onclick="exportToCSV()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Export CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Siswa</th>
+                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mata Pelajaran</th>
+                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Harian</th>
+                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tugas</th>
+                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ujian</th>
+                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Rata-rata</th>
+                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gradeTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Cetak Rapor -->
+        <div id="content-rapor" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6">Pilih Siswa untuk Cetak Rapor</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Siswa</label>
+                                <select id="raporStudentSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Pilih Siswa...</option>
+                                    <option value="Ahmad Rizki">Ahmad Rizki</option>
+                                    <option value="Siti Nurhaliza">Siti Nurhaliza</option>
+                                    <option value="Budi Santoso">Budi Santoso</option>
+                                    <option value="Dewi Sartika">Dewi Sartika</option>
+                                </select>
+                            </div>
+
+                            <div class="flex space-x-4">
+                                <button onclick="generateRapor()" class="flex-1 bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors">
+                                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    Preview Rapor
+                                </button>
+                                <button onclick="printRapor()" class="flex-1 bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition-colors">
+                                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                    </svg>
+                                    Cetak Rapor
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Rapor</h3>
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <p>• Rapor berisi nilai semua mata pelajaran</p>
+                            <p>• Menampilkan rata-rata per mata pelajaran</p>
+                            <p>• Dilengkapi dengan grade dan keterangan</p>
+                            <p>• Format siap cetak A4</p>
+                            <p>• Dapat disimpan sebagai PDF</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rapor Preview -->
+            <div id="raporPreview" class="hidden mt-8">
+                <div class="bg-white rounded-xl shadow-lg p-8" id="raporContent">
+                    <!-- Rapor content akan diisi oleh JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let gradesData = [
+            {student: "Ahmad Rizki", subject: "Matematika", daily: 85, assignment: 88, exam: 90, average: 87.9, grade: "A"},
+            {student: "Ahmad Rizki", subject: "Bahasa Indonesia", daily: 80, assignment: 85, exam: 82, average: 82.3, grade: "B+"},
+            {student: "Siti Nurhaliza", subject: "Matematika", daily: 92, assignment: 90, exam: 95, average: 92.5, grade: "A"},
+            {student: "Siti Nurhaliza", subject: "IPA", daily: 88, assignment: 85, exam: 90, average: 87.8, grade: "A"},
+            {student: "Budi Santoso", subject: "Matematika", daily: 75, assignment: 78, exam: 80, average: 77.9, grade: "B"},
+        ];
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('tab-active');
+                button.classList.add('text-gray-600', 'hover:text-blue-600');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.add('tab-active');
+            activeTab.classList.remove('text-gray-600', 'hover:text-blue-600');
+            
+            // Load data for specific tabs
+            if (tabName === 'rekap') {
+                loadGradeTable();
+            }
+        }
+
+        // Calculate average automatically
+        function calculateAverage() {
+            const daily = parseFloat(document.getElementById('dailyGrade').value) || 0;
+            const assignment = parseFloat(document.getElementById('assignmentGrade').value) || 0;
+            const exam = parseFloat(document.getElementById('examGrade').value) || 0;
+            
+            const average = (daily * 0.3) + (assignment * 0.3) + (exam * 0.4);
+            document.getElementById('averageDisplay').textContent = average.toFixed(1);
+            
+            return average;
+        }
+
+        // Get grade letter
+        function getGradeLetter(average) {
+            if (average >= 90) return 'A';
+            if (average >= 85) return 'A-';
+            if (average >= 80) return 'B+';
+            if (average >= 75) return 'B';
+            if (average >= 70) return 'B-';
+            if (average >= 65) return 'C+';
+            if (average >= 60) return 'C';
+            return 'D';
+        }
+
+        // Form submission
+        document.getElementById('gradeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const student = document.getElementById('studentSelect').value;
+            const subject = document.getElementById('subjectSelect').value;
+            const daily = parseFloat(document.getElementById('dailyGrade').value);
+            const assignment = parseFloat(document.getElementById('assignmentGrade').value);
+            const exam = parseFloat(document.getElementById('examGrade').value);
+            
+            if (!student || !subject || isNaN(daily) || isNaN(assignment) || isNaN(exam)) {
+                alert('Mohon lengkapi semua field dengan benar!');
+                return;
+            }
+            
+            const average = calculateAverage();
+            const grade = getGradeLetter(average);
+            
+            // Check if record exists and update, or add new
+            const existingIndex = gradesData.findIndex(item => 
+                item.student === student && item.subject === subject
+            );
+            
+            const newRecord = {
+                student: student,
+                subject: subject,
+                daily: daily,
+                assignment: assignment,
+                exam: exam,
+                average: parseFloat(average.toFixed(1)),
+                grade: grade
+            };
+            
+            if (existingIndex !== -1) {
+                gradesData[existingIndex] = newRecord;
+                alert('Nilai berhasil diperbarui!');
+            } else {
+                gradesData.push(newRecord);
+                alert('Nilai berhasil disimpan!');
+            }
+            
+            // Reset form
+            this.reset();
+            document.getElementById('averageDisplay').textContent = '0';
+        });
+
+        // Load grade table
+        function loadGradeTable() {
+            const tbody = document.getElementById('gradeTableBody');
+            const filterSubject = document.getElementById('filterSubject').value;
+            
+            let filteredData = gradesData;
+            if (filterSubject) {
+                filteredData = gradesData.filter(item => item.subject === filterSubject);
+            }
+            
+            tbody.innerHTML = '';
+            
+            filteredData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const gradeColor = item.average >= 85 ? 'text-green-600' : 
+                                 item.average >= 75 ? 'text-blue-600' : 
+                                 item.average >= 65 ? 'text-yellow-600' : 'text-red-600';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.student}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.subject}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">${item.daily}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">${item.assignment}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">${item.exam}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-semibold ${gradeColor}">${item.average}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${gradeColor} bg-opacity-10">${item.grade}</span>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const headers = ['No', 'Nama Siswa', 'Mata Pelajaran', 'Nilai Harian', 'Nilai Tugas', 'Nilai Ujian', 'Rata-rata', 'Grade'];
+            const csvContent = [
+                headers.join(','),
+                ...gradesData.map((item, index) => 
+                    [index + 1, item.student, item.subject, item.daily, item.assignment, item.exam, item.average, item.grade].join(',')
+                )
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'rekap_nilai_semester.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Generate rapor
+        function generateRapor() {
+            const studentName = document.getElementById('raporStudentSelect').value;
+            if (!studentName) {
+                alert('Pilih siswa terlebih dahulu!');
+                return;
+            }
+            
+            const studentGrades = gradesData.filter(item => item.student === studentName);
+            if (studentGrades.length === 0) {
+                alert('Tidak ada data nilai untuk siswa ini!');
+                return;
+            }
+            
+            const raporContent = document.getElementById('raporContent');
+            const totalAverage = studentGrades.reduce((sum, item) => sum + item.average, 0) / studentGrades.length;
+            
+            raporContent.innerHTML = `
+                <div class="print-only text-center mb-8">
+                    <h1 class="text-2xl font-bold">RAPOR SISWA</h1>
+                    <h2 class="text-lg">SD NEGERI CONTOH</h2>
+                    <p class="text-sm text-gray-600">Semester Ganjil 2024/2025</p>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Data Siswa</h3>
+                            <table class="w-full text-sm">
+                                <tr><td class="py-1 font-medium">Nama</td><td class="py-1">: ${studentName}</td></tr>
+                                <tr><td class="py-1 font-medium">Kelas</td><td class="py-1">: 5A</td></tr>
+                                <tr><td class="py-1 font-medium">Semester</td><td class="py-1">: Ganjil 2024/2025</td></tr>
+                            </table>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Ringkasan</h3>
+                            <table class="w-full text-sm">
+                                <tr><td class="py-1 font-medium">Jumlah Mata Pelajaran</td><td class="py-1">: ${studentGrades.length}</td></tr>
+                                <tr><td class="py-1 font-medium">Rata-rata Keseluruhan</td><td class="py-1">: ${totalAverage.toFixed(1)}</td></tr>
+                                <tr><td class="py-1 font-medium">Grade Keseluruhan</td><td class="py-1">: ${getGradeLetter(totalAverage)}</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4">Nilai Per Mata Pelajaran</h3>
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-300 px-4 py-2 text-left">No</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Mata Pelajaran</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center">Harian</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center">Tugas</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center">Ujian</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center">Rata-rata</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${studentGrades.map((item, index) => `
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">${index + 1}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${item.subject}</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center">${item.daily}</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center">${item.assignment}</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center">${item.exam}</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center font-semibold">${item.average}</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center font-semibold">${item.grade}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-12 grid grid-cols-2 gap-8 text-sm">
+                    <div>
+                        <p class="mb-16">Mengetahui,</p>
+                        <p class="font-semibold">Kepala Sekolah</p>
+                        <br><br>
+                        <p class="border-b border-black inline-block pb-1">Drs. Budi Hartono, M.Pd</p>
+                        <p>NIP. 196505151990031007</p>
+                    </div>
+                    <div>
+                        <p class="mb-16">Jakarta, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        <p class="font-semibold">Wali Kelas</p>
+                        <br><br>
+                        <p class="border-b border-black inline-block pb-1">Siti Aminah, S.Pd</p>
+                        <p>NIP. 197203121998032005</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('raporPreview').classList.remove('hidden');
+        }
+
+        // Print rapor
+        function printRapor() {
+            const studentName = document.getElementById('raporStudentSelect').value;
+            if (!studentName) {
+                alert('Pilih siswa dan generate rapor terlebih dahulu!');
+                return;
+            }
+            
+            generateRapor();
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+
+        // Event listeners
+        document.getElementById('dailyGrade').addEventListener('input', calculateAverage);
+        document.getElementById('assignmentGrade').addEventListener('input', calculateAverage);
+        document.getElementById('examGrade').addEventListener('input', calculateAverage);
+        document.getElementById('filterSubject').addEventListener('change', loadGradeTable);
+
+        // Initialize
+        loadGradeTable();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96eaaef886366476',t:'MTc1NTExNDAxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

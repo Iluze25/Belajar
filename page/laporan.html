@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsip & Laporan - SD Nusantara</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .hover-scale {
+        transition: transform 0.2s;
+      }
+      .hover-scale:hover {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-blue-500">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-6">
+          <div class="flex items-center space-x-4">
+            <div class="bg-blue-500 p-3 rounded-full">
+              <svg
+                class="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900">Arsip & Laporan</h1>
+              <p class="text-sm text-gray-600">
+                SD Nusantara - Sistem Manajemen Dokumen
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="text-sm text-gray-600">Admin: Bu Sari</span>
+            <div
+              class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold"
+            >
+              S
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div class="bg-white rounded-lg shadow-md p-1">
+        <nav class="flex space-x-1">
+          <button
+            onclick="showTab('arsip')"
+            id="tab-arsip"
+            class="tab-button flex-1 py-3 px-4 text-center rounded-md font-medium transition-colors bg-blue-500 text-white"
+          >
+            📁 Arsip Dokumen
+          </button>
+          <button
+            onclick="showTab('laporan')"
+            id="tab-laporan"
+            class="tab-button flex-1 py-3 px-4 text-center rounded-md font-medium transition-colors text-gray-600 hover:text-gray-900"
+          >
+            📊 Laporan
+          </button>
+          <button
+            onclick="showTab('statistik')"
+            id="tab-statistik"
+            class="tab-button flex-1 py-3 px-4 text-center rounded-md font-medium transition-colors text-gray-600 hover:text-gray-900"
+          >
+            📈 Statistik Kelas
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12">
+      <!-- Arsip Dokumen Tab -->
+      <div id="content-arsip" class="tab-content fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Upload Section -->
+          <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                📤 Upload Dokumen
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Jenis Dokumen</label
+                  >
+                  <select
+                    id="docType"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option>Surat Izin</option>
+                    <option>Surat Keterangan</option>
+                    <option>Dokumen Administrasi</option>
+                    <option>Surat Orang Tua</option>
+                    <option>Laporan Kegiatan</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Nama Dokumen</label
+                  >
+                  <input
+                    type="text"
+                    id="docName"
+                    placeholder="Masukkan nama dokumen"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >File</label
+                  >
+                  <input
+                    type="file"
+                    id="docFile"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <button
+                  onclick="uploadDocument()"
+                  class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors font-medium"
+                >
+                  Upload Dokumen
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Document List -->
+          <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">
+                  📋 Daftar Dokumen
+                </h3>
+                <div class="flex space-x-2">
+                  <input
+                    type="text"
+                    id="searchDoc"
+                    placeholder="Cari dokumen..."
+                    class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <select
+                    id="filterType"
+                    class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Semua Jenis</option>
+                    <option value="Surat Izin">Surat Izin</option>
+                    <option value="Surat Keterangan">Surat Keterangan</option>
+                    <option value="Dokumen Administrasi">
+                      Dokumen Administrasi
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div id="documentList" class="space-y-3">
+                <!-- Documents will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Laporan Tab -->
+      <div id="content-laporan" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Generate Report Section -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📄 Generate Laporan
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Jenis Laporan</label
+                >
+                <select
+                  id="reportType"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option>Laporan Absensi</option>
+                  <option>Laporan Nilai</option>
+                  <option>Laporan Gabungan</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Kelas</label
+                  >
+                  <select
+                    id="reportClass"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option>1A</option>
+                    <option>1B</option>
+                    <option>2A</option>
+                    <option>2B</option>
+                    <option>3A</option>
+                    <option>3B</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Periode</label
+                  >
+                  <select
+                    id="reportPeriod"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option>Januari 2024</option>
+                    <option>Februari 2024</option>
+                    <option>Maret 2024</option>
+                    <option>Semester 1</option>
+                    <option>Semester 2</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex space-x-3">
+                <button
+                  onclick="generateReport('pdf')"
+                  class="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors font-medium"
+                >
+                  📄 Download PDF
+                </button>
+                <button
+                  onclick="generateReport('excel')"
+                  class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors font-medium"
+                >
+                  📊 Download Excel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Reports -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📋 Laporan Terbaru
+            </h3>
+            <div id="recentReports" class="space-y-3">
+              <!-- Recent reports will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistik Tab -->
+      <div id="content-statistik" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- Class Selection -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              🎯 Pilih Kelas
+            </h3>
+            <div class="grid grid-cols-3 gap-3">
+              <button
+                onclick="showClassStats('1A')"
+                class="class-btn bg-blue-100 text-blue-700 py-3 px-4 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+              >
+                1A
+              </button>
+              <button
+                onclick="showClassStats('1B')"
+                class="class-btn bg-blue-100 text-blue-700 py-3 px-4 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+              >
+                1B
+              </button>
+              <button
+                onclick="showClassStats('2A')"
+                class="class-btn bg-blue-100 text-blue-700 py-3 px-4 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+              >
+                2A
+              </button>
+              <button
+                onclick="showClassStats('2B')"
+                class="class-btn bg-blue-100 text-blue-700 py-3 px-4 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+              >
+                2B
+              </button>
+              <button
+                onclick="showClassStats('3A')"
+                class="class-btn bg-blue-100 text-blue-700 py-3 px-4 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+              >
+                3A
+              </button>
+              <button
+                onclick="showClassStats('3B')"
+                class="class-btn bg-blue-100 text-blue-700 py-3 px-4 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+              >
+                3B
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📊 Ringkasan Statistik
+            </h3>
+            <div id="quickStats" class="grid grid-cols-2 gap-4">
+              <div class="text-center p-4 bg-green-50 rounded-lg">
+                <div class="text-2xl font-bold text-green-600">92%</div>
+                <div class="text-sm text-gray-600">Rata-rata Kehadiran</div>
+              </div>
+              <div class="text-center p-4 bg-blue-50 rounded-lg">
+                <div class="text-2xl font-bold text-blue-600">85</div>
+                <div class="text-sm text-gray-600">Rata-rata Nilai</div>
+              </div>
+              <div class="text-center p-4 bg-purple-50 rounded-lg">
+                <div class="text-2xl font-bold text-purple-600">78%</div>
+                <div class="text-sm text-gray-600">Partisipasi Aktif</div>
+              </div>
+              <div class="text-center p-4 bg-orange-50 rounded-lg">
+                <div class="text-2xl font-bold text-orange-600">24</div>
+                <div class="text-sm text-gray-600">Total Siswa</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📈 Tren Absensi Bulanan
+            </h3>
+            <canvas id="attendanceChart" width="400" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📊 Distribusi Nilai
+            </h3>
+            <canvas id="gradeChart" width="400" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div
+      id="successModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
+        <div class="text-center">
+          <div class="text-green-500 text-4xl mb-4">✅</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Berhasil!</h3>
+          <p id="successMessage" class="text-gray-600 mb-4"></p>
+          <button
+            onclick="closeModal()"
+            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sample data
+      let documents = [
+        {
+          id: 1,
+          name: "Surat Izin Ahmad Sakit",
+          type: "Surat Izin",
+          date: "2024-03-15",
+          size: "245 KB",
+        },
+        {
+          id: 2,
+          name: "Laporan Kegiatan Outing Kelas 2A",
+          type: "Laporan Kegiatan",
+          date: "2024-03-14",
+          size: "1.2 MB",
+        },
+        {
+          id: 3,
+          name: "Surat Keterangan Prestasi Siti",
+          type: "Surat Keterangan",
+          date: "2024-03-13",
+          size: "180 KB",
+        },
+        {
+          id: 4,
+          name: "Dokumen Administrasi Semester",
+          type: "Dokumen Administrasi",
+          date: "2024-03-12",
+          size: "890 KB",
+        },
+      ];
+
+      let reports = [
+        {
+          name: "Laporan Absensi Kelas 1A - Maret 2024",
+          type: "PDF",
+          date: "2024-03-15",
+          size: "456 KB",
+        },
+        {
+          name: "Laporan Nilai Kelas 2B - Februari 2024",
+          type: "Excel",
+          date: "2024-03-14",
+          size: "234 KB",
+        },
+        {
+          name: "Laporan Gabungan Kelas 3A - Semester 1",
+          type: "PDF",
+          date: "2024-03-13",
+          size: "1.1 MB",
+        },
+      ];
+
+      // Tab functionality
+      function showTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.classList.add("hidden");
+        });
+
+        // Remove active class from all tabs
+        document.querySelectorAll(".tab-button").forEach((button) => {
+          button.classList.remove("bg-blue-500", "text-white");
+          button.classList.add("text-gray-600", "hover:text-gray-900");
+        });
+
+        // Show selected tab content
+        document
+          .getElementById(`content-${tabName}`)
+          .classList.remove("hidden");
+
+        // Add active class to selected tab
+        const activeTab = document.getElementById(`tab-${tabName}`);
+        activeTab.classList.add("bg-blue-500", "text-white");
+        activeTab.classList.remove("text-gray-600", "hover:text-gray-900");
+
+        // Initialize charts if statistics tab is selected
+        if (tabName === "statistik") {
+          setTimeout(initCharts, 100);
+        }
+      }
+
+      // Document management
+      function uploadDocument() {
+        const docType = document.getElementById("docType").value;
+        const docName = document.getElementById("docName").value;
+        const docFile = document.getElementById("docFile").files[0];
+
+        if (!docName || !docFile) {
+          alert("Mohon lengkapi semua field!");
+          return;
+        }
+
+        const newDoc = {
+          id: documents.length + 1,
+          name: docName,
+          type: docType,
+          date: new Date().toISOString().split("T")[0],
+          size: Math.round(docFile.size / 1024) + " KB",
+        };
+
+        documents.unshift(newDoc);
+        renderDocuments();
+
+        // Clear form
+        document.getElementById("docName").value = "";
+        document.getElementById("docFile").value = "";
+
+        showSuccess("Dokumen berhasil diupload!");
+      }
+
+      function renderDocuments() {
+        const container = document.getElementById("documentList");
+        const searchTerm = document
+          .getElementById("searchDoc")
+          .value.toLowerCase();
+        const filterType = document.getElementById("filterType").value;
+
+        let filteredDocs = documents.filter((doc) => {
+          const matchesSearch = doc.name.toLowerCase().includes(searchTerm);
+          const matchesFilter = !filterType || doc.type === filterType;
+          return matchesSearch && matchesFilter;
+        });
+
+        container.innerHTML = filteredDocs
+          .map(
+            (doc) => `
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover-scale">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900">${doc.name}</h4>
+                            <p class="text-sm text-gray-600">${doc.type} • ${doc.date} • ${doc.size}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="viewDocument(${doc.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Lihat</button>
+                        <button onclick="downloadDocument(${doc.id})" class="text-green-600 hover:text-green-800 text-sm font-medium">Download</button>
+                        <button onclick="deleteDocument(${doc.id})" class="text-red-600 hover:text-red-800 text-sm font-medium">Hapus</button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function viewDocument(id) {
+        const doc = documents.find((d) => d.id === id);
+        showSuccess(`Membuka dokumen: ${doc.name}`);
+      }
+
+      function downloadDocument(id) {
+        const doc = documents.find((d) => d.id === id);
+        showSuccess(`Mengunduh dokumen: ${doc.name}`);
+      }
+
+      function deleteDocument(id) {
+        if (confirm("Yakin ingin menghapus dokumen ini?")) {
+          documents = documents.filter((d) => d.id !== id);
+          renderDocuments();
+          showSuccess("Dokumen berhasil dihapus!");
+        }
+      }
+
+      // Report generation
+      function generateReport(format) {
+        const reportType = document.getElementById("reportType").value;
+        const reportClass = document.getElementById("reportClass").value;
+        const reportPeriod = document.getElementById("reportPeriod").value;
+
+        const newReport = {
+          name: `${reportType} Kelas ${reportClass} - ${reportPeriod}`,
+          type: format.toUpperCase(),
+          date: new Date().toISOString().split("T")[0],
+          size: Math.floor(Math.random() * 800 + 200) + " KB",
+        };
+
+        reports.unshift(newReport);
+        renderReports();
+
+        showSuccess(
+          `Laporan ${format.toUpperCase()} berhasil dibuat dan diunduh!`
+        );
+      }
+
+      function renderReports() {
+        const container = document.getElementById("recentReports");
+        container.innerHTML = reports
+          .slice(0, 5)
+          .map(
+            (report) => `
+                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-${
+                          report.type === "PDF" ? "red" : "green"
+                        }-100 p-2 rounded-lg">
+                            <span class="text-${
+                              report.type === "PDF" ? "red" : "green"
+                            }-600 text-xs font-bold">${report.type}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900 text-sm">${
+                              report.name
+                            }</h4>
+                            <p class="text-xs text-gray-600">${report.date} • ${
+              report.size
+            }</p>
+                        </div>
+                    </div>
+                    <button onclick="downloadReport('${
+                      report.name
+                    }')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Download</button>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function downloadReport(name) {
+        showSuccess(`Mengunduh laporan: ${name}`);
+      }
+
+      // Statistics
+      function showClassStats(className) {
+        // Update active class button
+        document.querySelectorAll(".class-btn").forEach((btn) => {
+          btn.classList.remove("bg-blue-500", "text-white");
+          btn.classList.add("bg-blue-100", "text-blue-700");
+        });
+        event.target.classList.add("bg-blue-500", "text-white");
+        event.target.classList.remove("bg-blue-100", "text-blue-700");
+
+        // Update quick stats with sample data for selected class
+        const stats = {
+          "1A": {
+            attendance: "94%",
+            grade: "87",
+            participation: "82%",
+            students: "26",
+          },
+          "1B": {
+            attendance: "91%",
+            grade: "84",
+            participation: "79%",
+            students: "25",
+          },
+          "2A": {
+            attendance: "93%",
+            grade: "86",
+            participation: "81%",
+            students: "24",
+          },
+          "2B": {
+            attendance: "89%",
+            grade: "83",
+            participation: "76%",
+            students: "23",
+          },
+          "3A": {
+            attendance: "95%",
+            grade: "88",
+            participation: "85%",
+            students: "22",
+          },
+          "3B": {
+            attendance: "92%",
+            grade: "85",
+            participation: "78%",
+            students: "24",
+          },
+        };
+
+        const classStats = stats[className];
+        document.getElementById("quickStats").innerHTML = `
+                <div class="text-center p-4 bg-green-50 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">${classStats.attendance}</div>
+                    <div class="text-sm text-gray-600">Rata-rata Kehadiran</div>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">${classStats.grade}</div>
+                    <div class="text-sm text-gray-600">Rata-rata Nilai</div>
+                </div>
+                <div class="text-center p-4 bg-purple-50 rounded-lg">
+                    <div class="text-2xl font-bold text-purple-600">${classStats.participation}</div>
+                    <div class="text-sm text-gray-600">Partisipasi Aktif</div>
+                </div>
+                <div class="text-center p-4 bg-orange-50 rounded-lg">
+                    <div class="text-2xl font-bold text-orange-600">${classStats.students}</div>
+                    <div class="text-sm text-gray-600">Total Siswa</div>
+                </div>
+            `;
+
+        // Update charts
+        updateCharts(className);
+      }
+
+      function initCharts() {
+        // Attendance Chart
+        const attendanceCtx = document
+          .getElementById("attendanceChart")
+          .getContext("2d");
+        new Chart(attendanceCtx, {
+          type: "line",
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
+            datasets: [
+              {
+                label: "Tingkat Kehadiran (%)",
+                data: [92, 94, 91, 95, 93, 96],
+                borderColor: "rgb(59, 130, 246)",
+                backgroundColor: "rgba(59, 130, 246, 0.1)",
+                tension: 0.4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+              },
+            },
+          },
+        });
+
+        // Grade Distribution Chart
+        const gradeCtx = document.getElementById("gradeChart").getContext("2d");
+        new Chart(gradeCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["A (90-100)", "B (80-89)", "C (70-79)", "D (60-69)"],
+            datasets: [
+              {
+                data: [35, 40, 20, 5],
+                backgroundColor: [
+                  "rgb(34, 197, 94)",
+                  "rgb(59, 130, 246)",
+                  "rgb(251, 191, 36)",
+                  "rgb(239, 68, 68)",
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+          },
+        });
+      }
+
+      function updateCharts(className) {
+        // This would update charts with class-specific data
+        // For demo purposes, we'll just show a success message
+        showSuccess(`Statistik untuk kelas ${className} telah diperbarui!`);
+      }
+
+      // Modal functions
+      function showSuccess(message) {
+        document.getElementById("successMessage").textContent = message;
+        document.getElementById("successModal").classList.remove("hidden");
+        document.getElementById("successModal").classList.add("flex");
+      }
+
+      function closeModal() {
+        document.getElementById("successModal").classList.add("hidden");
+        document.getElementById("successModal").classList.remove("flex");
+      }
+
+      // Search and filter functionality
+      document
+        .getElementById("searchDoc")
+        .addEventListener("input", renderDocuments);
+      document
+        .getElementById("filterType")
+        .addEventListener("change", renderDocuments);
+
+      // Initialize page
+      document.addEventListener("DOMContentLoaded", function () {
+        renderDocuments();
+        renderReports();
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'96eac185a62dea7b',t:'MTc1NTExNDc3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

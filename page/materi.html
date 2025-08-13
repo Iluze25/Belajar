@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Materi Pembelajaran - SD Cerdas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .subject-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 16px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #34d399);
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-xl">📚</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800">SD Cerdas</h1>
+              <p class="text-sm text-gray-600">
+                Materi Pembelajaran Interaktif
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              👨‍🏫 Guru
+            </button>
+            <button
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              👨‍🎓 Siswa
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+      <!-- Filter Tabs -->
+      <div class="mb-8">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button
+            onclick="filterSubjects('all')"
+            class="filter-btn bg-blue-500 text-white px-6 py-2 rounded-full font-medium transition-colors"
+          >
+            Semua Mata Pelajaran
+          </button>
+          <button
+            onclick="filterSubjects('matematika')"
+            class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-gray-300 transition-colors"
+          >
+            Matematika
+          </button>
+          <button
+            onclick="filterSubjects('bahasa')"
+            class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-gray-300 transition-colors"
+          >
+            Bahasa Indonesia
+          </button>
+          <button
+            onclick="filterSubjects('ipa')"
+            class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-gray-300 transition-colors"
+          >
+            IPA
+          </button>
+          <button
+            onclick="filterSubjects('ips')"
+            class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-gray-300 transition-colors"
+          >
+            IPS
+          </button>
+        </div>
+      </div>
+
+      <!-- Subject Cards Grid -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+        id="subjectsGrid"
+      >
+        <!-- Matematika -->
+        <div
+          class="subject-card card-hover bg-white rounded-xl p-6 shadow-lg"
+          data-subject="matematika"
+        >
+          <div class="subject-icon bg-blue-100 text-blue-600">🔢</div>
+          <h3 class="text-xl font-semibold text-gray-800 text-center mb-2">
+            Matematika
+          </h3>
+          <p class="text-gray-600 text-center mb-4">
+            Penjumlahan, Pengurangan, Perkalian
+          </p>
+          <div class="progress-bar mb-4">
+            <div class="progress-fill" style="width: 75%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span>12 Materi</span>
+            <span>75% Selesai</span>
+          </div>
+          <button
+            onclick="openSubject('matematika')"
+            class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition-colors"
+          >
+            Buka Materi
+          </button>
+        </div>
+
+        <!-- Bahasa Indonesia -->
+        <div
+          class="subject-card card-hover bg-white rounded-xl p-6 shadow-lg"
+          data-subject="bahasa"
+        >
+          <div class="subject-icon bg-green-100 text-green-600">📖</div>
+          <h3 class="text-xl font-semibold text-gray-800 text-center mb-2">
+            Bahasa Indonesia
+          </h3>
+          <p class="text-gray-600 text-center mb-4">
+            Membaca, Menulis, Bercerita
+          </p>
+          <div class="progress-bar mb-4">
+            <div class="progress-fill" style="width: 60%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span>10 Materi</span>
+            <span>60% Selesai</span>
+          </div>
+          <button
+            onclick="openSubject('bahasa')"
+            class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors"
+          >
+            Buka Materi
+          </button>
+        </div>
+
+        <!-- IPA -->
+        <div
+          class="subject-card card-hover bg-white rounded-xl p-6 shadow-lg"
+          data-subject="ipa"
+        >
+          <div class="subject-icon bg-purple-100 text-purple-600">🔬</div>
+          <h3 class="text-xl font-semibold text-gray-800 text-center mb-2">
+            IPA
+          </h3>
+          <p class="text-gray-600 text-center mb-4">
+            Alam, Tubuh Manusia, Energi
+          </p>
+          <div class="progress-bar mb-4">
+            <div class="progress-fill" style="width: 45%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span>8 Materi</span>
+            <span>45% Selesai</span>
+          </div>
+          <button
+            onclick="openSubject('ipa')"
+            class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg transition-colors"
+          >
+            Buka Materi
+          </button>
+        </div>
+
+        <!-- IPS -->
+        <div
+          class="subject-card card-hover bg-white rounded-xl p-6 shadow-lg"
+          data-subject="ips"
+        >
+          <div class="subject-icon bg-orange-100 text-orange-600">🌍</div>
+          <h3 class="text-xl font-semibold text-gray-800 text-center mb-2">
+            IPS
+          </h3>
+          <p class="text-gray-600 text-center mb-4">
+            Sejarah, Geografi, Budaya
+          </p>
+          <div class="progress-bar mb-4">
+            <div class="progress-fill" style="width: 30%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span>6 Materi</span>
+            <span>30% Selesai</span>
+          </div>
+          <button
+            onclick="openSubject('ips')"
+            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors"
+          >
+            Buka Materi
+          </button>
+        </div>
+
+        <!-- Seni Budaya -->
+        <div
+          class="subject-card card-hover bg-white rounded-xl p-6 shadow-lg"
+          data-subject="seni"
+        >
+          <div class="subject-icon bg-pink-100 text-pink-600">🎨</div>
+          <h3 class="text-xl font-semibold text-gray-800 text-center mb-2">
+            Seni Budaya
+          </h3>
+          <p class="text-gray-600 text-center mb-4">
+            Menggambar, Menyanyi, Menari
+          </p>
+          <div class="progress-bar mb-4">
+            <div class="progress-fill" style="width: 80%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span>5 Materi</span>
+            <span>80% Selesai</span>
+          </div>
+          <button
+            onclick="openSubject('seni')"
+            class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition-colors"
+          >
+            Buka Materi
+          </button>
+        </div>
+
+        <!-- Olahraga -->
+        <div
+          class="subject-card card-hover bg-white rounded-xl p-6 shadow-lg"
+          data-subject="olahraga"
+        >
+          <div class="subject-icon bg-red-100 text-red-600">⚽</div>
+          <h3 class="text-xl font-semibold text-gray-800 text-center mb-2">
+            Olahraga
+          </h3>
+          <p class="text-gray-600 text-center mb-4">
+            Senam, Permainan, Kesehatan
+          </p>
+          <div class="progress-bar mb-4">
+            <div class="progress-fill" style="width: 55%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span>7 Materi</span>
+            <span>55% Selesai</span>
+          </div>
+          <button
+            onclick="openSubject('olahraga')"
+            class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition-colors"
+          >
+            Buka Materi
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Subject Detail Modal -->
+    <div id="subjectModal" class="modal">
+      <div
+        class="bg-white rounded-xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h2 id="modalTitle" class="text-2xl font-bold text-gray-800"></h2>
+          <button
+            onclick="closeModal()"
+            class="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <div id="modalContent" class="space-y-6">
+          <!-- Content will be dynamically loaded -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Material Preview Modal -->
+    <div id="previewModal" class="modal">
+      <div
+        class="bg-white rounded-xl p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 id="previewTitle" class="text-xl font-bold text-gray-800"></h3>
+          <button
+            onclick="closePreview()"
+            class="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <div id="previewContent" class="space-y-4">
+          <!-- Preview content will be loaded here -->
+        </div>
+
+        <div class="flex justify-end space-x-4 mt-6 pt-6 border-t">
+          <button
+            onclick="closePreview()"
+            class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+          >
+            Tutup
+          </button>
+          <button
+            onclick="startMaterial()"
+            class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Mulai Belajar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Subject data
+      const subjects = {
+        matematika: {
+          title: "Matematika",
+          icon: "🔢",
+          color: "blue",
+          materials: [
+            {
+              id: 1,
+              title: "Penjumlahan Dasar",
+              description:
+                "Belajar penjumlahan 1-20 dengan cara yang menyenangkan",
+              type: "Interaktif",
+              duration: "15 menit",
+              difficulty: "Mudah",
+              completed: true,
+            },
+            {
+              id: 2,
+              title: "Pengurangan Sederhana",
+              description:
+                "Memahami konsep pengurangan dengan gambar dan permainan",
+              type: "Video + Latihan",
+              duration: "20 menit",
+              difficulty: "Mudah",
+              completed: true,
+            },
+            {
+              id: 3,
+              title: "Perkalian Dasar",
+              description:
+                "Mengenal tabel perkalian 1-5 dengan lagu dan permainan",
+              type: "Interaktif",
+              duration: "25 menit",
+              difficulty: "Sedang",
+              completed: false,
+            },
+          ],
+        },
+        bahasa: {
+          title: "Bahasa Indonesia",
+          icon: "📖",
+          color: "green",
+          materials: [
+            {
+              id: 1,
+              title: "Membaca Cerita Pendek",
+              description:
+                "Membaca dan memahami cerita sederhana dengan gambar menarik",
+              type: "Cerita Interaktif",
+              duration: "20 menit",
+              difficulty: "Mudah",
+              completed: true,
+            },
+            {
+              id: 2,
+              title: "Menulis Kalimat Sederhana",
+              description:
+                "Belajar menyusun kalimat dengan kata-kata yang tepat",
+              type: "Latihan Menulis",
+              duration: "30 menit",
+              difficulty: "Sedang",
+              completed: false,
+            },
+          ],
+        },
+        ipa: {
+          title: "IPA",
+          icon: "🔬",
+          color: "purple",
+          materials: [
+            {
+              id: 1,
+              title: "Bagian Tubuh Manusia",
+              description: "Mengenal nama dan fungsi bagian tubuh manusia",
+              type: "Eksplorasi Visual",
+              duration: "25 menit",
+              difficulty: "Mudah",
+              completed: true,
+            },
+            {
+              id: 2,
+              title: "Siklus Air",
+              description: "Memahami proses siklus air di alam dengan animasi",
+              type: "Animasi Interaktif",
+              duration: "20 menit",
+              difficulty: "Sedang",
+              completed: false,
+            },
+          ],
+        },
+      };
+
+      // Filter subjects
+      function filterSubjects(category) {
+        const cards = document.querySelectorAll(".subject-card");
+        const buttons = document.querySelectorAll(".filter-btn");
+
+        // Update button styles
+        buttons.forEach((btn) => {
+          btn.classList.remove("bg-blue-500", "text-white");
+          btn.classList.add("bg-gray-200", "text-gray-700");
+        });
+        event.target.classList.remove("bg-gray-200", "text-gray-700");
+        event.target.classList.add("bg-blue-500", "text-white");
+
+        // Show/hide cards
+        cards.forEach((card) => {
+          if (category === "all" || card.dataset.subject === category) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
+
+      // Open subject detail
+      function openSubject(subjectKey) {
+        const subject = subjects[subjectKey];
+        if (!subject) return;
+
+        document.getElementById("modalTitle").textContent = subject.title;
+
+        const content = document.getElementById("modalContent");
+        content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    ${subject.materials
+                      .map(
+                        (material) => `
+                        <div class="bg-gray-50 rounded-lg p-4 border-l-4 border-${
+                          subject.color
+                        }-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-semibold text-gray-800">${
+                                  material.title
+                                }</h4>
+                                ${
+                                  material.completed
+                                    ? '<span class="text-green-500 text-sm">✓ Selesai</span>'
+                                    : '<span class="text-orange-500 text-sm">⏳ Belum</span>'
+                                }
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">${
+                              material.description
+                            }</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-3">
+                                <span>${material.type}</span>
+                                <span>${material.duration}</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="previewMaterial(${
+                                  material.id
+                                }, '${subjectKey}')" class="flex-1 bg-gray-200 text-gray-700 py-1 px-3 rounded text-sm hover:bg-gray-300 transition-colors">
+                                    👁️ Preview
+                                </button>
+                                <button onclick="startMaterial(${
+                                  material.id
+                                }, '${subjectKey}')" class="flex-1 bg-${
+                          subject.color
+                        }-500 text-white py-1 px-3 rounded text-sm hover:bg-${
+                          subject.color
+                        }-600 transition-colors">
+                                    ▶️ Mulai
+                                </button>
+                            </div>
+                        </div>
+                    `
+                      )
+                      .join("")}
+                </div>
+            `;
+
+        document.getElementById("subjectModal").classList.add("active");
+      }
+
+      // Preview material
+      function previewMaterial(materialId, subjectKey) {
+        const subject = subjects[subjectKey];
+        const material = subject.materials.find((m) => m.id === materialId);
+
+        document.getElementById("previewTitle").textContent = material.title;
+
+        const previewContent = document.getElementById("previewContent");
+        previewContent.innerHTML = `
+                <div class="bg-gradient-to-r from-${subject.color}-50 to-${
+          subject.color
+        }-100 rounded-lg p-6 mb-4">
+                    <div class="text-4xl mb-4 text-center">${subject.icon}</div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">${
+                      material.title
+                    }</h4>
+                    <p class="text-gray-600 mb-4">${material.description}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-white rounded p-3">
+                            <span class="font-medium text-gray-700">Jenis:</span>
+                            <span class="text-gray-600">${material.type}</span>
+                        </div>
+                        <div class="bg-white rounded p-3">
+                            <span class="font-medium text-gray-700">Durasi:</span>
+                            <span class="text-gray-600">${
+                              material.duration
+                            }</span>
+                        </div>
+                        <div class="bg-white rounded p-3">
+                            <span class="font-medium text-gray-700">Tingkat:</span>
+                            <span class="text-gray-600">${
+                              material.difficulty
+                            }</span>
+                        </div>
+                        <div class="bg-white rounded p-3">
+                            <span class="font-medium text-gray-700">Status:</span>
+                            <span class="text-gray-600">${
+                              material.completed ? "Selesai" : "Belum Dimulai"
+                            }</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                    <h5 class="font-medium text-yellow-800 mb-2">Yang akan dipelajari:</h5>
+                    <ul class="text-sm text-yellow-700 space-y-1">
+                        <li>• Konsep dasar materi pembelajaran</li>
+                        <li>• Latihan interaktif dan menyenangkan</li>
+                        <li>• Evaluasi pemahaman siswa</li>
+                        <li>• Permainan edukatif terkait materi</li>
+                    </ul>
+                </div>
+            `;
+
+        document.getElementById("previewModal").classList.add("active");
+      }
+
+      // Start material
+      function startMaterial(materialId, subjectKey) {
+        closePreview();
+        closeModal();
+
+        // Create a simple learning interface
+        const learningContent = `
+                <div class="fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 z-50 flex items-center justify-center">
+                    <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 text-center">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Selamat Belajar!</h3>
+                        <p class="text-gray-600 mb-6">Materi pembelajaran sedang dimuat...</p>
+                        <div class="progress-bar mb-6">
+                            <div class="progress-fill" style="width: 0%" id="loadingProgress"></div>
+                        </div>
+                        <button onclick="closeLearning()" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            Kembali ke Menu
+                        </button>
+                    </div>
+                </div>
+            `;
+
+        document.body.insertAdjacentHTML("beforeend", learningContent);
+
+        // Simulate loading
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 10;
+          document.getElementById("loadingProgress").style.width =
+            progress + "%";
+          if (progress >= 100) {
+            clearInterval(interval);
+          }
+        }, 200);
+      }
+
+      // Close learning interface
+      function closeLearning() {
+        const learningDiv = document.querySelector(
+          ".fixed.inset-0.bg-gradient-to-br"
+        );
+        if (learningDiv) {
+          learningDiv.remove();
+        }
+      }
+
+      // Close modals
+      function closeModal() {
+        document.getElementById("subjectModal").classList.remove("active");
+      }
+
+      function closePreview() {
+        document.getElementById("previewModal").classList.remove("active");
+      }
+
+      // Close modals when clicking outside
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("modal")) {
+          e.target.classList.remove("active");
+        }
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'96eaac17970b6476',t:'MTc1NTExMzkwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

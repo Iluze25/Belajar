@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SD Tugas & Pekerjaan Rumah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .task-card {
+            transition: all 0.3s ease;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .grade-animation {
+            animation: gradeReveal 0.5s ease-out;
+        }
+        @keyframes gradeReveal {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-blue-500">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-500 text-white p-3 rounded-full">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.84L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.84l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">SD Tugas & PR</h1>
+                        <p class="text-sm text-gray-600">Sistem Manajemen Tugas Sekolah</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button id="notificationBtn" class="bg-red-500 text-white p-2 rounded-full relative notification-badge">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                            </svg>
+                            <span class="absolute -top-1 -right-1 bg-yellow-400 text-xs rounded-full h-5 w-5 flex items-center justify-center text-black font-bold">3</span>
+                        </button>
+                    </div>
+                    <select id="userRole" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium">
+                        <option value="guru">Guru</option>
+                        <option value="siswa">Siswa</option>
+                        <option value="orangtua">Orang Tua</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Dashboard Guru -->
+        <div id="guruDashboard" class="space-y-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Dashboard Guru</h2>
+                    <button id="createTaskBtn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                        + Buat Tugas Baru
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100">Total Tugas</p>
+                                <p class="text-3xl font-bold">12</p>
+                            </div>
+                            <div class="bg-blue-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 102 0V3h4v1a1 1 0 102 0V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-green-100">Sudah Dinilai</p>
+                                <p class="text-3xl font-bold">8</p>
+                            </div>
+                            <div class="bg-green-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-yellow-100">Menunggu</p>
+                                <p class="text-3xl font-bold">4</p>
+                            </div>
+                            <div class="bg-yellow-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-red-100">Terlambat</p>
+                                <p class="text-3xl font-bold">2</p>
+                            </div>
+                            <div class="bg-red-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Daftar Tugas</h3>
+                    <div id="taskList" class="space-y-4">
+                        <!-- Tasks will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Siswa -->
+        <div id="siswaDashboard" class="space-y-8 hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard Siswa</h2>
+                
+                <!-- Student Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-purple-100">Tugas Aktif</p>
+                                <p class="text-3xl font-bold">5</p>
+                            </div>
+                            <div class="bg-purple-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 102 0V3h4v1a1 1 0 102 0V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm8 8a1 1 0 01-1-1V8a1 1 0 012 0v4a1 1 0 01-1 1z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-green-100">Selesai</p>
+                                <p class="text-3xl font-bold">15</p>
+                            </div>
+                            <div class="bg-green-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-orange-100">Rata-rata Nilai</p>
+                                <p class="text-3xl font-bold">85</p>
+                            </div>
+                            <div class="bg-orange-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Task List -->
+                <div id="studentTaskList" class="space-y-4">
+                    <!-- Student tasks will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Orang Tua -->
+        <div id="orangtuaDashboard" class="space-y-8 hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard Orang Tua</h2>
+                
+                <!-- Parent Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-indigo-100">Anak: Ahmad Rizki</p>
+                                <p class="text-indigo-100">Kelas: 5A</p>
+                                <p class="text-2xl font-bold mt-2">Tugas Aktif: 3</p>
+                            </div>
+                            <div class="bg-indigo-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-teal-500 to-teal-600 text-white p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-teal-100">Performa Bulan Ini</p>
+                                <p class="text-3xl font-bold">88</p>
+                                <p class="text-teal-100">Rata-rata Nilai</p>
+                            </div>
+                            <div class="bg-teal-400 p-3 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parent Task Monitoring -->
+                <div id="parentTaskList" class="space-y-4">
+                    <!-- Parent view tasks will be populated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Task Modal -->
+    <div id="createTaskModal" class="modal">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Buat Tugas Baru</h3>
+                <button id="closeCreateModal" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="createTaskForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Judul Tugas</label>
+                    <input type="text" id="taskTitle" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Contoh: Matematika - Perkalian" required>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                        <select id="taskClass" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Pilih Kelas</option>
+                            <option value="1A">1A</option>
+                            <option value="1B">1B</option>
+                            <option value="2A">2A</option>
+                            <option value="2B">2B</option>
+                            <option value="3A">3A</option>
+                            <option value="3B">3B</option>
+                            <option value="4A">4A</option>
+                            <option value="4B">4B</option>
+                            <option value="5A">5A</option>
+                            <option value="5B">5B</option>
+                            <option value="6A">6A</option>
+                            <option value="6B">6B</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
+                        <select id="taskSubject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            <option value="">Pilih Mata Pelajaran</option>
+                            <option value="Matematika">Matematika</option>
+                            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                            <option value="IPA">IPA</option>
+                            <option value="IPS">IPS</option>
+                            <option value="Bahasa Inggris">Bahasa Inggris</option>
+                            <option value="PKN">PKN</option>
+                            <option value="Agama">Agama</option>
+                            <option value="Olahraga">Olahraga</option>
+                            <option value="Seni">Seni</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Tugas</label>
+                    <select id="taskType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Tipe</option>
+                        <option value="essay">Tugas Essay</option>
+                        <option value="quiz">Kuis Pilihan Ganda</option>
+                        <option value="upload">Upload File</option>
+                        <option value="project">Proyek</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Tugas</label>
+                    <textarea id="taskDescription" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Jelaskan detail tugas yang harus dikerjakan siswa..." required></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Deadline</label>
+                        <input type="date" id="taskDeadline" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jam Deadline</label>
+                        <input type="time" id="taskTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" value="23:59" required>
+                    </div>
+                </div>
+                
+                <!-- Quiz Questions Section -->
+                <div id="quizSection" class="hidden space-y-4">
+                    <div class="border-t pt-4">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Soal Kuis Pilihan Ganda</h4>
+                        <div id="quizQuestions" class="space-y-4">
+                            <!-- Quiz questions will be added here -->
+                        </div>
+                        <button type="button" id="addQuestionBtn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            + Tambah Soal
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-4 pt-6 border-t">
+                    <button type="button" id="cancelCreateTask" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                        Buat Tugas
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Submit Assignment Modal -->
+    <div id="submitModal" class="modal">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Kumpulkan Tugas</h3>
+                <button id="closeSubmitModal" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="submitContent">
+                <!-- Content will be populated based on task type -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Pemberitahuan</h3>
+                <button id="closeNotificationModal" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700">
+                                <strong>Deadline Besok!</strong><br>
+                                Tugas Matematika - Perkalian (Kelas 5A) akan berakhir besok pukul 23:59
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                <strong>Tugas Baru!</strong><br>
+                                IPA - Sistem Tata Surya telah ditambahkan untuk Kelas 6A
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-700">
+                                <strong>Nilai Tersedia!</strong><br>
+                                Hasil kuis Bahasa Indonesia sudah dapat dilihat
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let tasks = [
+            {
+                id: 1,
+                title: "Matematika - Perkalian",
+                class: "5A",
+                subject: "Matematika",
+                type: "quiz",
+                description: "Kerjakan soal perkalian 1-10",
+                deadline: "2024-01-15",
+                time: "23:59",
+                status: "active",
+                submissions: 25,
+                totalStudents: 30,
+                questions: [
+                    {
+                        question: "Berapa hasil dari 7 x 8?",
+                        options: ["54", "56", "58", "60"],
+                        correct: 1
+                    },
+                    {
+                        question: "Berapa hasil dari 9 x 6?",
+                        options: ["52", "54", "56", "58"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Bahasa Indonesia - Cerita Pendek",
+                class: "4B",
+                subject: "Bahasa Indonesia",
+                type: "essay",
+                description: "Tulis cerita pendek minimal 200 kata",
+                deadline: "2024-01-20",
+                time: "15:00",
+                status: "active",
+                submissions: 18,
+                totalStudents: 25
+            },
+            {
+                id: 3,
+                title: "IPA - Laporan Percobaan",
+                class: "6A",
+                subject: "IPA",
+                type: "upload",
+                description: "Upload laporan percobaan tentang magnet",
+                deadline: "2024-01-18",
+                time: "16:00",
+                status: "active",
+                submissions: 12,
+                totalStudents: 28
+            }
+        ];
+
+        let currentUser = 'guru';
+        let questionCount = 0;
+
+        // DOM Elements
+        const userRoleSelect = document.getElementById('userRole');
+        const guruDashboard = document.getElementById('guruDashboard');
+        const siswaDashboard = document.getElementById('siswaDashboard');
+        const orangtuaDashboard = document.getElementById('orangtuaDashboard');
+        const createTaskBtn = document.getElementById('createTaskBtn');
+        const createTaskModal = document.getElementById('createTaskModal');
+        const submitModal = document.getElementById('submitModal');
+        const notificationModal = document.getElementById('notificationModal');
+        const notificationBtn = document.getElementById('notificationBtn');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTasks();
+            renderStudentTasks();
+            renderParentTasks();
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDeadline').min = today;
+        });
+
+        // Event Listeners
+        userRoleSelect.addEventListener('change', function() {
+            currentUser = this.value;
+            switchDashboard();
+        });
+
+        createTaskBtn.addEventListener('click', () => {
+            createTaskModal.classList.add('active');
+        });
+
+        document.getElementById('closeCreateModal').addEventListener('click', () => {
+            createTaskModal.classList.remove('active');
+        });
+
+        document.getElementById('cancelCreateTask').addEventListener('click', () => {
+            createTaskModal.classList.remove('active');
+        });
+
+        document.getElementById('closeSubmitModal').addEventListener('click', () => {
+            submitModal.classList.remove('active');
+        });
+
+        notificationBtn.addEventListener('click', () => {
+            notificationModal.classList.add('active');
+        });
+
+        document.getElementById('closeNotificationModal').addEventListener('click', () => {
+            notificationModal.classList.remove('active');
+        });
+
+        document.getElementById('taskType').addEventListener('change', function() {
+            const quizSection = document.getElementById('quizSection');
+            if (this.value === 'quiz') {
+                quizSection.classList.remove('hidden');
+                addQuestion(); // Add first question
+            } else {
+                quizSection.classList.add('hidden');
+                document.getElementById('quizQuestions').innerHTML = '';
+                questionCount = 0;
+            }
+        });
+
+        document.getElementById('addQuestionBtn').addEventListener('click', addQuestion);
+
+        document.getElementById('createTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            createTask();
+        });
+
+        // Functions
+        function switchDashboard() {
+            guruDashboard.classList.add('hidden');
+            siswaDashboard.classList.add('hidden');
+            orangtuaDashboard.classList.add('hidden');
+            
+            switch(currentUser) {
+                case 'guru':
+                    guruDashboard.classList.remove('hidden');
+                    break;
+                case 'siswa':
+                    siswaDashboard.classList.remove('hidden');
+                    break;
+                case 'orangtua':
+                    orangtuaDashboard.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const taskCard = createTaskCard(task);
+                taskList.appendChild(taskCard);
+            });
+        }
+
+        function createTaskCard(task) {
+            const card = document.createElement('div');
+            card.className = 'task-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all';
+            
+            const statusColor = task.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
+            const progressPercentage = Math.round((task.submissions / task.totalStudents) * 100);
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <h4 class="text-lg font-semibold text-gray-800">${task.title}</h4>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
+                                ${task.status === 'active' ? 'Aktif' : 'Selesai'}
+                            </span>
+                        </div>
+                        <div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.84L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.84l-7-3z"/>
+                                </svg>
+                                ${task.class}
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                ${task.deadline} ${task.time}
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
+                                </svg>
+                                ${task.subject}
+                            </span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${task.description}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <span>Progress Pengumpulan</span>
+                            <span>${task.submissions}/${task.totalStudents} (${progressPercentage}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: ${progressPercentage}%"></div>
+                        </div>
+                    </div>
+                    <div class="ml-6 flex space-x-2">
+                        <button onclick="viewSubmissions(${task.id})" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                            Lihat Jawaban
+                        </button>
+                        <button onclick="gradeTask(${task.id})" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                            Nilai
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function renderStudentTasks() {
+            const studentTaskList = document.getElementById('studentTaskList');
+            studentTaskList.innerHTML = '<h3 class="text-xl font-semibold text-gray-800 mb-4">Tugas Saya</h3>';
+            
+            // Filter tasks for student's class (assuming student is in 5A)
+            const studentTasks = tasks.filter(task => task.class === '5A');
+            
+            studentTasks.forEach(task => {
+                const taskCard = createStudentTaskCard(task);
+                studentTaskList.appendChild(taskCard);
+            });
+        }
+
+        function createStudentTaskCard(task) {
+            const card = document.createElement('div');
+            card.className = 'task-card bg-white border border-gray-200 rounded-xl p-6';
+            
+            const isSubmitted = Math.random() > 0.5; // Random submission status for demo
+            const grade = isSubmitted ? Math.floor(Math.random() * 40) + 60 : null; // Random grade 60-100
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <h4 class="text-lg font-semibold text-gray-800">${task.title}</h4>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${isSubmitted ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                ${isSubmitted ? 'Sudah Dikumpul' : 'Belum Dikumpul'}
+                            </span>
+                            ${grade ? `<span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 grade-animation">Nilai: ${grade}</span>` : ''}
+                        </div>
+                        <div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                Deadline: ${task.deadline} ${task.time}
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
+                                </svg>
+                                ${task.subject}
+                            </span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${task.description}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-500">
+                        Tipe: ${getTaskTypeLabel(task.type)}
+                    </div>
+                    <div class="flex space-x-2">
+                        ${!isSubmitted ? `<button onclick="submitAssignment(${task.id})" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">Kumpulkan Tugas</button>` : ''}
+                        <button onclick="viewTaskDetails(${task.id})" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">Detail</button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function renderParentTasks() {
+            const parentTaskList = document.getElementById('parentTaskList');
+            parentTaskList.innerHTML = '<h3 class="text-xl font-semibold text-gray-800 mb-4">Tugas Anak</h3>';
+            
+            // Filter tasks for child's class (assuming child is in 5A)
+            const childTasks = tasks.filter(task => task.class === '5A');
+            
+            childTasks.forEach(task => {
+                const taskCard = createParentTaskCard(task);
+                parentTaskList.appendChild(taskCard);
+            });
+        }
+
+        function createParentTaskCard(task) {
+            const card = document.createElement('div');
+            card.className = 'task-card bg-white border border-gray-200 rounded-xl p-6';
+            
+            const isSubmitted = Math.random() > 0.3; // Random submission status for demo
+            const grade = isSubmitted ? Math.floor(Math.random() * 40) + 60 : null;
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <h4 class="text-lg font-semibold text-gray-800">${task.title}</h4>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${isSubmitted ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                ${isSubmitted ? 'Sudah Dikumpul' : 'Belum Dikumpul'}
+                            </span>
+                            ${grade ? `<span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Nilai: ${grade}</span>` : ''}
+                        </div>
+                        <div class="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                Deadline: ${task.deadline} ${task.time}
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
+                                </svg>
+                                ${task.subject}
+                            </span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${task.description}</p>
+                        
+                        ${!isSubmitted ? `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
+                            <p class="text-sm text-yellow-700">
+                                <strong>Reminder:</strong> Anak Anda belum mengumpulkan tugas ini. Deadline dalam ${Math.floor(Math.random() * 3) + 1} hari.
+                            </p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function addQuestion() {
+            questionCount++;
+            const questionsContainer = document.getElementById('quizQuestions');
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'border border-gray-200 rounded-lg p-4';
+            questionDiv.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <h5 class="font-medium text-gray-800">Soal ${questionCount}</h5>
+                    <button type="button" onclick="removeQuestion(this)" class="text-red-500 hover:text-red-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1H8a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-3">
+                    <input type="text" placeholder="Tulis pertanyaan..." class="w-full px-3 py-2 border border-gray-300 rounded-lg question-text" required>
+                    
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="radio" name="correct_${questionCount}" value="0" class="correct-answer">
+                            <input type="text" placeholder="Pilihan A" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg option-text" required>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="radio" name="correct_${questionCount}" value="1" class="correct-answer">
+                            <input type="text" placeholder="Pilihan B" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg option-text" required>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="radio" name="correct_${questionCount}" value="2" class="correct-answer">
+                            <input type="text" placeholder="Pilihan C" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg option-text" required>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="radio" name="correct_${questionCount}" value="3" class="correct-answer">
+                            <input type="text" placeholder="Pilihan D" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg option-text" required>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500">Pilih jawaban yang benar dengan mencentang radio button</p>
+                </div>
+            `;
+            
+            questionsContainer.appendChild(questionDiv);
+        }
+
+        function removeQuestion(button) {
+            button.closest('.border').remove();
+            // Renumber questions
+            const questions = document.querySelectorAll('#quizQuestions .border');
+            questions.forEach((q, index) => {
+                q.querySelector('h5').textContent = `Soal ${index + 1}`;
+            });
+            questionCount = questions.length;
+        }
+
+        function createTask() {
+            const formData = new FormData(document.getElementById('createTaskForm'));
+            const taskData = {
+                id: tasks.length + 1,
+                title: document.getElementById('taskTitle').value,
+                class: document.getElementById('taskClass').value,
+                subject: document.getElementById('taskSubject').value,
+                type: document.getElementById('taskType').value,
+                description: document.getElementById('taskDescription').value,
+                deadline: document.getElementById('taskDeadline').value,
+                time: document.getElementById('taskTime').value,
+                status: 'active',
+                submissions: 0,
+                totalStudents: Math.floor(Math.random() * 10) + 20 // Random 20-30 students
+            };
+
+            // If it's a quiz, collect questions
+            if (taskData.type === 'quiz') {
+                const questions = [];
+                const questionDivs = document.querySelectorAll('#quizQuestions .border');
+                
+                questionDivs.forEach(div => {
+                    const questionText = div.querySelector('.question-text').value;
+                    const options = Array.from(div.querySelectorAll('.option-text')).map(input => input.value);
+                    const correctAnswer = div.querySelector('.correct-answer:checked');
+                    
+                    if (questionText && options.every(opt => opt) && correctAnswer) {
+                        questions.push({
+                            question: questionText,
+                            options: options,
+                            correct: parseInt(correctAnswer.value)
+                        });
+                    }
+                });
+                
+                taskData.questions = questions;
+            }
+
+            tasks.push(taskData);
+            renderTasks();
+            createTaskModal.classList.remove('active');
+            
+            // Reset form
+            document.getElementById('createTaskForm').reset();
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('quizQuestions').innerHTML = '';
+            questionCount = 0;
+            
+            // Show success message
+            showNotification('Tugas berhasil dibuat!', 'success');
+        }
+
+        function submitAssignment(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            const submitContent = document.getElementById('submitContent');
+            
+            if (task.type === 'quiz') {
+                // Create quiz interface
+                let quizHTML = `
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">${task.title}</h4>
+                        <p class="text-gray-600 mb-4">${task.description}</p>
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-3 rounded mb-4">
+                            <p class="text-sm text-blue-700">Pilih jawaban yang paling tepat untuk setiap soal.</p>
+                        </div>
+                    </div>
+                    
+                    <form id="quizSubmissionForm" class="space-y-6">
+                `;
+                
+                task.questions.forEach((q, index) => {
+                    quizHTML += `
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-800 mb-3">${index + 1}. ${q.question}</h5>
+                            <div class="space-y-2">
+                    `;
+                    
+                    q.options.forEach((option, optIndex) => {
+                        quizHTML += `
+                            <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                <input type="radio" name="question_${index}" value="${optIndex}" class="text-blue-500" required>
+                                <span>${String.fromCharCode(65 + optIndex)}. ${option}</span>
+                            </label>
+                        `;
+                    });
+                    
+                    quizHTML += `
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                quizHTML += `
+                        <div class="flex justify-end space-x-4 pt-6 border-t">
+                            <button type="button" onclick="submitModal.classList.remove('active')" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                                Kumpulkan Jawaban
+                            </button>
+                        </div>
+                    </form>
+                `;
+                
+                submitContent.innerHTML = quizHTML;
+                
+                document.getElementById('quizSubmissionForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Calculate score
+                    let correct = 0;
+                    task.questions.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="question_${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.correct) {
+                            correct++;
+                        }
+                    });
+                    
+                    const score = Math.round((correct / task.questions.length) * 100);
+                    
+                    submitModal.classList.remove('active');
+                    showNotification(`Kuis berhasil dikumpulkan! Nilai Anda: ${score}`, 'success');
+                    renderStudentTasks();
+                });
+                
+            } else if (task.type === 'essay') {
+                submitContent.innerHTML = `
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">${task.title}</h4>
+                        <p class="text-gray-600 mb-4">${task.description}</p>
+                    </div>
+                    
+                    <form id="essaySubmissionForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jawaban Anda</label>
+                            <textarea id="essayAnswer" rows="10" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tulis jawaban Anda di sini..." required></textarea>
+                            <p class="text-xs text-gray-500 mt-1">Minimal 200 kata</p>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 pt-6 border-t">
+                            <button type="button" onclick="submitModal.classList.remove('active')" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                                Kumpulkan Jawaban
+                            </button>
+                        </div>
+                    </form>
+                `;
+                
+                document.getElementById('essaySubmissionForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const answer = document.getElementById('essayAnswer').value;
+                    const wordCount = answer.trim().split(/\s+/).length;
+                    
+                    if (wordCount < 200) {
+                        showNotification('Jawaban harus minimal 200 kata!', 'error');
+                        return;
+                    }
+                    
+                    submitModal.classList.remove('active');
+                    showNotification('Tugas essay berhasil dikumpulkan!', 'success');
+                    renderStudentTasks();
+                });
+                
+            } else if (task.type === 'upload') {
+                submitContent.innerHTML = `
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">${task.title}</h4>
+                        <p class="text-gray-600 mb-4">${task.description}</p>
+                    </div>
+                    
+                    <form id="uploadSubmissionForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload File</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                                <input type="file" id="fileUpload" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                                <label for="fileUpload" class="cursor-pointer">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <div class="mt-4">
+                                        <p class="text-sm text-gray-600">
+                                            <span class="font-medium text-blue-600 hover:text-blue-500">Klik untuk upload</span>
+                                            atau drag and drop
+                                        </p>
+                                        <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, PNG (max. 10MB)</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div id="fileInfo" class="mt-2 hidden">
+                                <p class="text-sm text-green-600">File dipilih: <span id="fileName"></span></p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (Opsional)</label>
+                            <textarea id="uploadNote" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tambahkan catatan untuk guru..."></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 pt-6 border-t">
+                            <button type="button" onclick="submitModal.classList.remove('active')" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                                Kumpulkan File
+                            </button>
+                        </div>
+                    </form>
+                `;
+                
+                document.getElementById('fileUpload').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        document.getElementById('fileName').textContent = file.name;
+                        document.getElementById('fileInfo').classList.remove('hidden');
+                    }
+                });
+                
+                document.getElementById('uploadSubmissionForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const file = document.getElementById('fileUpload').files[0];
+                    
+                    if (!file) {
+                        showNotification('Silakan pilih file untuk diupload!', 'error');
+                        return;
+                    }
+                    
+                    if (file.size > 10 * 1024 * 1024) { // 10MB
+                        showNotification('Ukuran file terlalu besar! Maksimal 10MB.', 'error');
+                        return;
+                    }
+                    
+                    submitModal.classList.remove('active');
+                    showNotification('File berhasil diupload!', 'success');
+                    renderStudentTasks();
+                });
+            }
+            
+            submitModal.classList.add('active');
+        }
+
+        function viewSubmissions(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            showNotification(`Melihat ${task.submissions} jawaban untuk tugas "${task.title}"`, 'info');
+        }
+
+        function gradeTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            showNotification(`Menilai tugas "${task.title}" untuk ${task.submissions} siswa`, 'info');
+        }
+
+        function viewTaskDetails(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            showNotification(`Melihat detail tugas "${task.title}"`, 'info');
+        }
+
+        function getTaskTypeLabel(type) {
+            const types = {
+                'essay': 'Essay',
+                'quiz': 'Kuis Pilihan Ganda',
+                'upload': 'Upload File',
+                'project': 'Proyek'
+            };
+            return types[type] || type;
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full`;
+            
+            const colors = {
+                'success': 'bg-green-500 text-white',
+                'error': 'bg-red-500 text-white',
+                'info': 'bg-blue-500 text-white',
+                'warning': 'bg-yellow-500 text-black'
+            };
+            
+            notification.className += ` ${colors[type]}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96eabcf5e725b5cc',t:'MTc1NTExNDU5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
